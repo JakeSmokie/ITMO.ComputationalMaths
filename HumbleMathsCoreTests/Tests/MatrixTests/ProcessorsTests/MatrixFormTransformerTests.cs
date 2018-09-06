@@ -7,7 +7,7 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.ProcessorsTests {
         [Fact]
         public void TestFormTransformer()
         {
-            var parser = new MatrixParser();
+            var parser = new MatrixAsLinearSystemParser();
             var transformer = new MatrixFormTransformer();
             var formChecker = new MatrixFormChecker();
 

@@ -46,13 +46,6 @@ namespace HumbleMaths.Structures {
             get { return _matrix.GetLength(0); }
         }
 
-        public IEnumerable<T> MainDiagonalElements {
-            get {
-                return Enumerable.Range(0, Height)
-                    .Select(x => _matrix[x, x]);
-            }
-        }
-
         public object Clone()
         {
             return new Matrix<T>(_matrix.Clone() as T[,]);
@@ -77,17 +70,17 @@ namespace HumbleMaths.Structures {
             return ReferenceEquals(this, other) || Equals(_matrix, other._matrix);
         }
 
+        public void SwapRows(int src, int dest)
+        {
+            for (var i = 0; i < Width; i++) {
+                (_matrix[src, i], _matrix[dest, i]) =
+                    (_matrix[dest, i], _matrix[src, i]);
+            }
+        }
+
         public Matrix<T> CloneMatrix()
         {
             return (Matrix<T>) Clone();
-        }
-
-        /// <summary>
-        ///     Returns cloned instance of array as matrix representation
-        /// </summary>
-        public T[,] GetArray()
-        {
-            return (T[,]) _matrix.Clone();
         }
 
         private static bool IsSizeIncorrect(int width, int height)
@@ -110,17 +103,7 @@ namespace HumbleMaths.Structures {
 
         public override int GetHashCode()
         {
-            return _matrix?.GetHashCode() ?? 0;
-        }
-
-        public static bool operator ==(Matrix<T> left, Matrix<T> right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Matrix<T> left, Matrix<T> right)
-        {
-            return !Equals(left, right);
+            return _matrix.GetHashCode();
         }
 
         public override string ToString()
@@ -136,46 +119,6 @@ namespace HumbleMaths.Structures {
             }
 
             return s;
-        }
-
-        /// <summary>
-        ///     Gets row via index starting from 0
-        /// </summary>
-        public IEnumerable<T> GetRow(int row)
-        {
-            for (var i = 0; i < Width; i++) {
-                yield return _matrix[row, i];
-            }
-        }
-
-        /// <summary>
-        ///     Gets column via index starting from 0
-        /// </summary>
-        public IEnumerable<T> GetColumn(int column)
-        {
-            for (var i = 0; i < Height; i++) {
-                yield return _matrix[i, column];
-            }
-        }
-
-        /// <summary>
-        ///     Gets element of main diagonal via index starting from 0
-        /// </summary>
-        public T GetMainDiagonalElement(int index)
-        {
-            return this[index, index];
-        }
-
-        /// <summary>
-        ///     Creates a clone of matrix
-        ///     and swaps rows in cloned matrix
-        /// </summary>
-        public void SwapRows(int src, int dest)
-        {
-            for (var i = 0; i < Width; i++) {
-                (_matrix[src, i], _matrix[dest, i]) =
-                    (_matrix[dest, i], _matrix[src, i]);
-            }
         }
     }
 }

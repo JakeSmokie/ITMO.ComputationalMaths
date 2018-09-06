@@ -11,7 +11,7 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.SolversTests {
         [InlineData("1, 3, -2, 5, 3, 5, 6, 7, 2, 4, 3, 8", "-15, 8, 2")]
         public void TestGaussSolver(string system, string expectedResult)
         {
-            var parser = new MatrixParser();
+            var parser = new MatrixAsLinearSystemParser();
             var solver = new GaussSolver();
 
             var input = parser.ParseMatrix(system);

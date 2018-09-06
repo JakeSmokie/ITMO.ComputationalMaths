@@ -6,9 +6,12 @@ namespace HumbleMaths.Processors {
     public class MatrixFormChecker {
         public bool IsMatrixTriangular(Matrix<double> matrix)
         {
-            for (var i = 0; i < matrix.Height; i++) {
-                var any = matrix.OfType<double>()
-                    .Skip(i * matrix.Width)
+            for (var i = 1; i < matrix.Height; i++) {
+                // get all items leading to echelon (marked as x)
+                // * * *
+                // x * *
+                // x x *
+                var any = matrix.Skip(i * matrix.Width)
                     .Take(i)
                     .Any(x => !x.IsZero());
 

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Linq;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
 using HumbleMaths.Processors;
-using HumbleMaths.Structures;
 
 namespace SandboxCore {
     internal class Program {
         private static void Main(string[] args)
         {
-            var parser = new MatrixParser();
+            var parser = new MatrixAsLinearSystemParser();
             var solver = new GaussSolver();
             var determinantCalculator = new MatrixDeterminantCalculator();
 
@@ -31,12 +29,6 @@ namespace SandboxCore {
 
             result.ForEach(Console.WriteLine);
             Console.ReadLine();
-        }
-
-        private static double MultiplicateMainDiagonalElements(Matrix<double> matrix)
-        {
-            return matrix.MainDiagonalElements
-                .Aggregate(1.0, (x, y) => x * y);
         }
     }
 }

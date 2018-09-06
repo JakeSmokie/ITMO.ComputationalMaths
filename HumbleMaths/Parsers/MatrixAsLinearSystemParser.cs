@@ -5,7 +5,7 @@ using System.Linq;
 using HumbleMaths.Structures;
 
 namespace HumbleMaths.Parsers {
-    public class MatrixParser {
+    public class MatrixAsLinearSystemParser {
         public Matrix<double> ParseMatrix(string input)
         {
             var numbers = input.Split(',')

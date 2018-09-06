@@ -14,7 +14,7 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.ParsersTests {
             var input = ints.Aggregate("", (x, y) => x + y + ", ")
                 .TrimEnd(',', ' ');
 
-            var parser = new MatrixParser();
+            var parser = new MatrixAsLinearSystemParser();
             var matrix = parser.ParseMatrix(input);
 
             for (var i = 0; i < ints.Count; i++) {
