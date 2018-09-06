@@ -1,11 +1,9 @@
 ﻿using System.Linq;
-using HumbleMaths.Extensions;
 using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class MatrixFormChecker {
-        public bool IsMatrixTriangular(Matrix<double> matrix)
-        {
+        public bool IsMatrixTriangular(Matrix<Fraction> matrix) {
             for (var i = 1; i < matrix.Height; i++) {
                 // get all items leading to echelon (marked as x)
                 // * * *

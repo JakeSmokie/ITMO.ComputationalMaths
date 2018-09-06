@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HumbleMaths.Extensions;
 using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class MatrixFormTransformer {
         /// <exception cref="ArgumentException">Threw if matrix cannot be transformed</exception>
-        public MatrixTransformationResult MatrixToTriangular(Matrix<double> input)
-        {
+        public MatrixTransformationResult MatrixToTriangular(Matrix<Fraction> input) {
             var (stabilizingSteps, matrix) = StabilizeMainDiagonal(input);
             var (eliminationSteps, result) = EliminateItemsLeadingToEchelon(matrix);
 
@@ -19,11 +17,10 @@ namespace HumbleMaths.Processors {
             };
         }
 
-        private static (List<Matrix<double>> steps, Matrix<double> result) StabilizeMainDiagonal(
-            Matrix<double> input)
-        {
+        private static (List<Matrix<Fraction>> steps, Matrix<Fraction> result) StabilizeMainDiagonal(
+            Matrix<Fraction> input) {
             var matrix = input.CloneMatrix();
-            var steps = new List<Matrix<double>>();
+            var steps = new List<Matrix<Fraction>>();
 
             // Tries to swap rows with zero valued main diagonal elements
             // with rows those have non - zero valued elements
@@ -41,8 +38,7 @@ namespace HumbleMaths.Processors {
         }
 
         private static void SwapRowWithRowHavingNonZeroValuedItem(
-            Matrix<double> matrix, int column, List<Matrix<double>> steps)
-        {
+            Matrix<Fraction> matrix, int column, List<Matrix<Fraction>> steps) {
             for (var row = column + 1; row < matrix.Height; row++) {
                 if (matrix[row, column].IsZero()) {
                     continue;
@@ -59,11 +55,10 @@ namespace HumbleMaths.Processors {
             throw new ArgumentException("Input matrix cannot be transformed into triangular form");
         }
 
-        private static (List<Matrix<double>> steps, Matrix<double> result) EliminateItemsLeadingToEchelon(
-            Matrix<double> input)
-        {
+        private static (List<Matrix<Fraction>> steps, Matrix<Fraction> result) EliminateItemsLeadingToEchelon(
+            Matrix<Fraction> input) {
             var matrix = input.CloneMatrix();
-            var steps = new List<Matrix<double>>();
+            var steps = new List<Matrix<Fraction>>();
 
             for (var src = 0; src < matrix.Height; src++) {
                 for (var dest = src + 1; dest < matrix.Height; dest++) {
@@ -76,14 +71,12 @@ namespace HumbleMaths.Processors {
         }
 
         private static void EliminateItemsLeadingToEchelonItemsOfRow(
-            Matrix<double> matrix, int src, int dest)
-        {
+            Matrix<Fraction> matrix, int src, int dest) {
             var destMultiplier = matrix[src, src];
             var srcMultiplier = matrix[dest, src];
 
             for (var i = 0; i < matrix.Width; i++) {
-                matrix[dest, i] *= destMultiplier;
-                matrix[dest, i] -= matrix[src, i] * srcMultiplier;
+                matrix[dest, i] -= matrix[src, i] * srcMultiplier / destMultiplier;
 
                 if (matrix[dest, i] == -0.0) {
                     matrix[dest, i] = 0.0;

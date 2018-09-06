@@ -5,13 +5,12 @@ using Xunit;
 namespace HumbleMathsCoreTests.Tests.MatrixTests.ParsersTests {
     public class MatrixParsersTests {
         [Fact]
-        public void Test()
-        {
+        public void Test() {
             var ints = Enumerable.Range(0, 10)
                 .SelectMany(x => Enumerable.Range(0, 9), (y, z) => y * z)
                 .ToList();
 
-            var input = ints.Aggregate("", (x, y) => x + y + ", ")
+            var input = string.Join(", ", ints)
                 .TrimEnd(',', ' ');
 
             var parser = new MatrixAsLinearSystemParser();

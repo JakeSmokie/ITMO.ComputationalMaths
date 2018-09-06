@@ -6,10 +6,9 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.Parsers {
     public class MatrixAsLinearSystemParser {
-        public Matrix<double> ParseMatrix(string input)
-        {
+        public Matrix<Fraction> ParseMatrix(string input) {
             var numbers = input.Split(',')
-                .Select(x => double.Parse(x, NumberFormatInfo.InvariantInfo))
+                .Select(x => new Fraction(double.Parse(x, NumberFormatInfo.InvariantInfo)))
                 .ToList();
 
             var rowsAmount = GetRowsAmount(numbers);
@@ -18,9 +17,8 @@ namespace HumbleMaths.Parsers {
             return matrix;
         }
 
-        private static Matrix<double> CreateMatrix(int rowsAmount, List<double> numbers)
-        {
-            var matrix = new Matrix<double>(rowsAmount + 1, rowsAmount);
+        private static Matrix<Fraction> CreateMatrix(int rowsAmount, List<Fraction> numbers) {
+            var matrix = new Matrix<Fraction>(rowsAmount + 1, rowsAmount);
 
             for (var i = 0; i < rowsAmount; i++)
             for (var j = 0; j < rowsAmount + 1; j++) {
@@ -30,9 +28,8 @@ namespace HumbleMaths.Parsers {
             return matrix;
         }
 
-        private static int GetRowsAmount(List<double> numbers)
-        {
-            var rowsAmount = Enumerable.Range(1, Matrix<double>.MaxHeight - 1)
+        private static int GetRowsAmount(List<Fraction> numbers) {
+            var rowsAmount = Enumerable.Range(1, Matrix<Fraction>.MaxHeight - 1)
                 .FirstOrDefault(x => x * (x + 1) == numbers.Count);
 
             if (rowsAmount == 0) {

@@ -2,13 +2,12 @@
 
 namespace HumbleMaths.Processors {
     public class MatrixClamper {
-        public Matrix<double> ClampMatrixToSquare(Matrix<double> matrix)
-        {
+        public Matrix<Fraction> ClampMatrixToSquare(Matrix<Fraction> matrix) {
             if (matrix.Height == matrix.Width) {
                 return matrix;
             }
 
-            var cells = new double[matrix.Height, matrix.Height];
+            var cells = new Fraction[matrix.Height, matrix.Height];
 
             for (var i = 0; i < matrix.Height; i++) {
                 for (var j = 0; j < matrix.Height; j++) {
@@ -16,7 +15,7 @@ namespace HumbleMaths.Processors {
                 }
             }
 
-            return new Matrix<double>(cells);
+            return new Matrix<Fraction>(cells);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using HumbleMaths.Extensions;
 using HumbleMaths.Processors;
 using HumbleMaths.Structures;
 
@@ -8,13 +7,12 @@ namespace HumbleMaths.LinearSystemSolvers {
     public class GaussSolver {
         private readonly MatrixFormTransformer _formTransformer = new MatrixFormTransformer();
 
-        public GaussSolverSolution SolveSystem(Matrix<double> system)
-        {
+        public GaussSolverSolution SolveSystem(Matrix<Fraction> system) {
             var (stabilizingSteps, eliminationSteps, matrix) =
                 _formTransformer.MatrixToTriangular(system);
 
-            var solvingSteps = new List<Matrix<double>>();
-            var result = new List<double>();
+            var solvingSteps = new List<Matrix<Fraction>>();
+            var result = new List<Fraction>();
 
             for (var row = matrix.Height - 1; row >= 0; row--) {
                 DivideRowByMainDiagonalElement(matrix, row);
@@ -34,8 +32,7 @@ namespace HumbleMaths.LinearSystemSolvers {
             };
         }
 
-        private static void DivideRowByMainDiagonalElement(Matrix<double> matrix, int row)
-        {
+        private static void DivideRowByMainDiagonalElement(Matrix<Fraction> matrix, int row) {
             var divider = matrix[row, row];
 
             if (divider.IsZero()) {
@@ -47,8 +44,7 @@ namespace HumbleMaths.LinearSystemSolvers {
             }
         }
 
-        private static void EliminateRowMainDiagonalElement(Matrix<double> matrix, int row)
-        {
+        private static void EliminateRowMainDiagonalElement(Matrix<Fraction> matrix, int row) {
             for (var destRow = 0; destRow < row; destRow++) {
                 matrix[destRow, matrix.Width - 1] -= matrix[destRow, row] * matrix[row, matrix.Width - 1];
                 matrix[destRow, row] = 0;

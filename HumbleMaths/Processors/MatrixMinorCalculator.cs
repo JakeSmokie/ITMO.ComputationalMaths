@@ -2,10 +2,9 @@
 
 namespace HumbleMaths.Processors {
     public class MatrixMinorCalculator {
-        public Matrix<double> GetMinor(Matrix<double> matrix, int skippedRow, int skippedColumn)
-        {
+        public Matrix<Fraction> GetMinor(Matrix<Fraction> matrix, int skippedRow, int skippedColumn) {
             var size = matrix.Height - 1;
-            var cells = new double[size, size];
+            var cells = new Fraction[size, size];
 
             for (var row = 0; row < matrix.Height; row++) {
                 if (row == skippedRow) {
@@ -24,7 +23,7 @@ namespace HumbleMaths.Processors {
                 }
             }
 
-            return new Matrix<double>(cells);
+            return new Matrix<Fraction>(cells);
         }
     }
 }

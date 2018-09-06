@@ -3,17 +3,16 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.LinearSystemSolvers {
     public class GaussSolverSolution {
-        public List<Matrix<double>> TriangleStabilizingSteps { get; set; }
-        public List<Matrix<double>> TriangleEliminationSteps { get; set; }
-        public List<Matrix<double>> SolvingSteps { get; set; }
-        public List<double> Result { get; set; }
+        public List<Matrix<Fraction>> TriangleStabilizingSteps { get; set; }
+        public List<Matrix<Fraction>> TriangleEliminationSteps { get; set; }
+        public List<Matrix<Fraction>> SolvingSteps { get; set; }
+        public List<Fraction> Result { get; set; }
 
         public void Deconstruct(
-            out List<Matrix<double>> triangleStabilizingSteps,
-            out List<Matrix<double>> triangleEliminationSteps,
-            out List<Matrix<double>> solvingSteps,
-            out List<double> results)
-        {
+            out List<Matrix<Fraction>> triangleStabilizingSteps,
+            out List<Matrix<Fraction>> triangleEliminationSteps,
+            out List<Matrix<Fraction>> solvingSteps,
+            out List<Fraction> results) {
             triangleStabilizingSteps = TriangleStabilizingSteps;
             triangleEliminationSteps = TriangleEliminationSteps;
             solvingSteps = SolvingSteps;

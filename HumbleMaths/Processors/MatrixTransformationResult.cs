@@ -3,15 +3,14 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class MatrixTransformationResult {
-        public List<Matrix<double>> StabilizingSteps { get; set; }
-        public List<Matrix<double>> EliminationSteps { get; set; }
-        public Matrix<double> Result { get; set; }
+        public List<Matrix<Fraction>> StabilizingSteps { get; set; }
+        public List<Matrix<Fraction>> EliminationSteps { get; set; }
+        public Matrix<Fraction> Result { get; set; }
 
         public void Deconstruct(
-            out List<Matrix<double>> stabilizingSteps,
-            out List<Matrix<double>> eliminationSteps,
-            out Matrix<double> result)
-        {
+            out List<Matrix<Fraction>> stabilizingSteps,
+            out List<Matrix<Fraction>> eliminationSteps,
+            out Matrix<Fraction> result) {
             stabilizingSteps = StabilizingSteps;
             eliminationSteps = EliminationSteps;
             result = Result;
