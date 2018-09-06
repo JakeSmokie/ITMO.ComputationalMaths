@@ -6,8 +6,6 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class MatrixFormTransformer {
-        private readonly MatrixFormChecker _matrixFormChecker = new MatrixFormChecker();
-
         /// <exception cref="ArgumentException">Threw if matrix cannot be transformed</exception>
         public MatrixTransformationResult MatrixToTriangular(Matrix<double> input)
         {
@@ -32,7 +30,7 @@ namespace HumbleMaths.Processors {
             // on same column as diagonal element
 
             for (var column = 0; column < matrix.Width - 1; column++) {
-                if (matrix[column, column] != 0) {
+                if (!matrix[column, column].IsZero()) {
                     continue;
                 }
 
