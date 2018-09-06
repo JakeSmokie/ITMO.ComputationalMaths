@@ -1,13 +1,4 @@
-﻿/*
- * Author: Syed Mehroz Alam
- * Email: smehrozalam@yahoo.com
- * URL: Programming Home "http://www.geocities.com/smehrozalam/" 
- * Date: 6/15/2004
- * Time: 10:54 AM
- *
- */
-
-using System;
+﻿using System;
 using System.Globalization;
 
 namespace HumbleMaths.Structures {

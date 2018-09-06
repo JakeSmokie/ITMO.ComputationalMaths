@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
 using HumbleMaths.Processors;
+using HumbleMaths.Structures;
 
 namespace SandboxCore {
     internal class Program {
@@ -22,7 +24,19 @@ namespace SandboxCore {
             Console.WriteLine("");
 
             var determinant = determinantCalculator.CalculateDeterminant(matrix);
-            Console.WriteLine($"Det = {determinant}");
+            Console.WriteLine($"Det (by minors) = {determinant}");
+
+            var detMatrix = triangleEliminationSteps.Last();
+
+            var secondDet = Enumerable.Range(0, detMatrix.Height)
+                .Select(x => detMatrix[x, x])
+                .Aggregate(new Fraction(1), (x, y) => x * y);
+
+            if (triangleStabilizingSteps.Count % 2 == 1) {
+                secondDet *= -1;
+            }
+
+            Console.WriteLine($"Det (by gauss) = {secondDet}");
 
             solvingSteps.ForEach(Console.WriteLine);
             Console.WriteLine("");
