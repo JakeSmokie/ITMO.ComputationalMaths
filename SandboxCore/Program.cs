@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
@@ -14,8 +15,9 @@ namespace SandboxCore {
 
             var matrix = parser.ParseMatrix("2, 1, 1, 2, 1, -1, 0, -2, 3, -1, 2, 2");
 
+            var solution = solver.SolveSystem(matrix);
             var (triangleStabilizingSteps, triangleEliminationSteps, solvingSteps, result) =
-                solver.SolveSystem(matrix);
+                solution;
 
             triangleStabilizingSteps.ForEach(Console.WriteLine);
             Console.WriteLine("");
@@ -23,25 +25,17 @@ namespace SandboxCore {
             triangleEliminationSteps.ForEach(Console.WriteLine);
             Console.WriteLine("");
 
-            var determinant = determinantCalculator.CalculateDeterminant(matrix);
-            Console.WriteLine($"Det (by minors) = {determinant}");
-
-            var detMatrix = triangleEliminationSteps.Last();
-
-            var secondDet = Enumerable.Range(0, detMatrix.Height)
-                .Select(x => detMatrix[x, x])
-                .Aggregate(new Fraction(1), (x, y) => x * y);
-
-            if (triangleStabilizingSteps.Count % 2 == 1) {
-                secondDet *= -1;
-            }
-
-            Console.WriteLine($"Det (by gauss) = {secondDet}");
-
             solvingSteps.ForEach(Console.WriteLine);
             Console.WriteLine("");
 
             result.ForEach(x => Console.WriteLine(x));
+
+            var determinant = determinantCalculator.CalculateDeterminant(matrix);
+            Console.WriteLine($"Det (by minors) = {determinant}");
+
+            var secondDet = solution.GetDeterminantByGauss();
+            Console.WriteLine($"Det (by gauss) = {secondDet}");
+
             Console.ReadLine();
         }
     }
