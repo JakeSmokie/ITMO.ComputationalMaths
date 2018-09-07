@@ -1,24 +1,28 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class MatrixFormChecker {
         public bool IsMatrixTriangular(Matrix<Fraction> matrix) {
-            for (var i = 1; i < matrix.Height; i++) {
-                // get all items leading to echelon (marked as x)
-                // * * *
-                // x * *
-                // x x *
-                var any = matrix.Skip(i * matrix.Width)
-                    .Take(i)
-                    .Any(x => !x.IsZero());
+            return Enumerable.Range(0, matrix.Height)
+                .All(IsRowCorrect);
 
-                if (any) {
-                    return false;
-                }
+            bool IsRowCorrect(int row) {
+                return GetEchelonItems(row)
+                    .All(x => x.IsZero());
             }
 
-            return true;
+            // get all items leading to echelon (marked as x)
+            // * * *
+            // x * *
+            // x x *
+            IEnumerable<Fraction> GetEchelonItems(int row) {
+                return matrix
+                    .Skip(row * matrix.Width)
+                    .Take(row);
+            }
+
         }
     }
 }

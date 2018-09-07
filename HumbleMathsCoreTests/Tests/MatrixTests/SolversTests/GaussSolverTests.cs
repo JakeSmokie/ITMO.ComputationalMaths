@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
+using HumbleMaths.Processors;
 using HumbleMaths.Structures;
 using Xunit;
 
@@ -13,6 +14,7 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.SolversTests {
         public void TestGaussSolver(string system, string expectedResult) {
             var parser = new MatrixAsLinearSystemParser();
             var solver = new GaussSolver();
+            var checker = new LinearSystemSolutionChecker();
 
             var input = parser.ParseMatrix(system);
 
@@ -24,6 +26,7 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.SolversTests {
                 .ToList();
 
             Assert.Equal(expected, result);
+            Assert.True(checker.IsSolutionValidForSystem(input, result));
         }
     }
 }

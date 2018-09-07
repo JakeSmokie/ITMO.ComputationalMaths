@@ -10,20 +10,17 @@ namespace HumbleMaths.LinearSystemSolvers {
         public List<Fraction> Result { get; set; }
 
         public Fraction GetDeterminantByGauss() {
-            var eliminationSteps = TriangleEliminationSteps;
             var stabilizingStepsCount = TriangleStabilizingSteps.Count;
+            var matrix = TriangleEliminationSteps.Last();
 
-            var detMatrix = eliminationSteps.Last();
-
-            var secondDet = Enumerable.Range(0, detMatrix.Height)
-                .Select(x => detMatrix[x, x])
+            var determinant = matrix.MainDiagonalItems
                 .Aggregate(new Fraction(1), (x, y) => x * y);
 
             if (stabilizingStepsCount % 2 == 1) {
-                secondDet *= -1;
+                determinant *= -1;
             }
 
-            return secondDet;
+            return determinant;
         }
 
         public void Deconstruct(

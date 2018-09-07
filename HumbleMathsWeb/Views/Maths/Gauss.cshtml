@@ -1,0 +1,41 @@
+﻿@model MatrixModel
+
+@{
+    ViewBag.Title = "Лабораторная работа 1";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-between">
+    <div class="col-5">
+        <h4>Лабораторная работа 1</h4>
+    </div>
+    <div class="col-1">
+        <a asp-area="" asp-controller="Maths" asp-action="Index"
+           class="btn btn-dark">
+            Назад
+        </a>
+    </div>
+</div>
+<div class="container-fluid">
+    <form asp-route="gauss" method="post">
+        <div class="form-group">
+            <label for="matrix">Матрица, для которой должна быть решена СЛАУ</label>
+            <input class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c, d, e, f, g">
+            <small id="matrixHelp" class="form-text text-muted">Матрица должна иметь размерность N x (N + 1)</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Решить</button>
+    </form>
+</div>
+<div class="container-fluid">
+    <p>@Model?.Matrix</p>
+    <p>
+        @if (Model != null) {
+            foreach (var a in Model.Solution.Result) {
+                <span>x = @a; </span>
+            }
+        }
+    </p>
+    <p>
+        <span>Det = @(Model?.Solution?.GetDeterminantByGauss() ?? "0")</span>
+    </p>
+</div>

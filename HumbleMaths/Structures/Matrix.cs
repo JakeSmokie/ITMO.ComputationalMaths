@@ -44,6 +44,13 @@ namespace HumbleMaths.Structures {
             get { return _matrix.GetLength(0); }
         }
 
+        public IEnumerable<T> MainDiagonalItems {
+            get {
+                return Enumerable.Range(0, Height)
+                    .Select(i => _matrix[i, i]);
+            }
+        }
+
         public object Clone() {
             return new Matrix<T>(_matrix.Clone() as T[,]);
         }
