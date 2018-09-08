@@ -5,81 +5,64 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class MatrixFormTransformer {
+        private readonly MatrixFormChecker _formChecker = new MatrixFormChecker();
+
         /// <exception cref="ArgumentException">Threw if matrix cannot be transformed</exception>
         public MatrixTransformationResult MatrixToTriangular(Matrix<Fraction> input) {
-            var (stabilizingSteps, matrix) = StabilizeMainDiagonal(input);
-            var (eliminationSteps, result) = EliminateItemsLeadingToEchelon(matrix);
+            var matrix = input.CloneMatrix();
+            var steps = new List<(TransformType Type, Matrix<Fraction> Matrix)>();
+
+            var row = 0;
+            var column = 0;
+
+            while (row < matrix.Height && column < matrix.Width) {
+                if (!StabilizeRowEchelon(matrix, row, column)) {
+                    column += 1;
+                    continue;
+                }
+
+                EliminateItems(matrix, row, column);
+
+                row += 1;
+                column += 1;
+            }
 
             return new MatrixTransformationResult {
-                StabilizingSteps = stabilizingSteps,
-                EliminationSteps = eliminationSteps,
-                Result = result
+                Steps = steps,
+                Result = matrix
             };
         }
 
-        private static (List<Matrix<Fraction>> steps, Matrix<Fraction> result) StabilizeMainDiagonal(
-            Matrix<Fraction> input) {
-            var matrix = input.CloneMatrix();
-            var steps = new List<Matrix<Fraction>>();
+        private static int GetMaxIndexOfColumn(Matrix<Fraction> matrix, int row, int column) {
+            var max = row;
 
-            // Tries to swap rows with zero valued main diagonal elements
-            // with rows those have non - zero valued elements
-            // on same column as diagonal element
-
-            for (var column = 0; column < matrix.Width - 1; column++) {
-                if (!matrix[column, column].IsZero()) {
-                    continue;
-                }
-
-                SwapRowWithRowHavingNonZeroValuedItem(matrix, column, steps);
-            }
-
-            return (steps, steps.LastOrDefault() ?? matrix);
-        }
-
-        private static void SwapRowWithRowHavingNonZeroValuedItem(
-            Matrix<Fraction> matrix, int column, List<Matrix<Fraction>> steps) {
-            for (var row = column + 1; row < matrix.Height; row++) {
-                if (matrix[row, column].IsZero()) {
-                    continue;
-                }
-
-                var stepMatrix = matrix.CloneMatrix();
-                stepMatrix.SwapRows(column, row);
-
-                steps.Add(stepMatrix);
-                return;
-            }
-
-            // no non-zero element found
-            throw new ArgumentException("Input matrix cannot be transformed into triangular form");
-        }
-
-        private static (List<Matrix<Fraction>> steps, Matrix<Fraction> result) EliminateItemsLeadingToEchelon(
-            Matrix<Fraction> input) {
-            var matrix = input.CloneMatrix();
-            var steps = new List<Matrix<Fraction>>();
-
-            for (var src = 0; src < matrix.Height; src++) {
-                for (var dest = src + 1; dest < matrix.Height; dest++) {
-                    EliminateItemsLeadingToEchelonItemsOfRow(matrix, src, dest);
-                    steps.Add(matrix.CloneMatrix());
+            for (var i = row; i < matrix.Height; i++) {
+                if (matrix[i, column] > matrix[max, column]) {
+                    max = i;
                 }
             }
 
-            return (steps, matrix);
+            return max;
         }
 
-        private static void EliminateItemsLeadingToEchelonItemsOfRow(
-            Matrix<Fraction> matrix, int src, int dest) {
-            var destMultiplier = matrix[src, src];
-            var srcMultiplier = matrix[dest, src];
+        private static bool StabilizeRowEchelon(Matrix<Fraction> matrix, int row, int column) {
+            var maxRow = GetMaxIndexOfColumn(matrix, row, column);
 
-            for (var i = 0; i < matrix.Width; i++) {
-                matrix[dest, i] -= matrix[src, i] * srcMultiplier / destMultiplier;
+            if (matrix[maxRow, column].IsZero()) {
+                return false;
+            }
 
-                if (matrix[dest, i] == -0.0) {
-                    matrix[dest, i] = 0.0;
+            matrix.SwapRows(maxRow, row);
+            return true;
+        }
+
+        private static void EliminateItems(Matrix<Fraction> matrix, int row, int column) {
+            for (var i = row + 1; i < matrix.Height; i++) {
+                var mul = matrix[i, column] / matrix[row, column];
+                matrix[i, column] = 0;
+
+                for (var j = column + 1; j < matrix.Width; j++) {
+                    matrix[i, j] -= matrix[row, j] * mul;
                 }
             }
         }

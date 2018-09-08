@@ -541,8 +541,7 @@ namespace HumbleMaths.Structures {
         }
 
         public bool IsZero() {
-            var value = ToDouble();
-            return value == 0.0 || value == -0.0;
+            return Denominator == 0 || Numerator == 0;
         }
     }
     //end class Fraction

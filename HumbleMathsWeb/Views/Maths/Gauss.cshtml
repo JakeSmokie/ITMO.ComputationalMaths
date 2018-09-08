@@ -5,6 +5,12 @@
     Layout = "_Layout";
 }
 
+<script type="text/javascript">
+    function submit() {
+        window.location.replace("/Maths/Gauss/" + $('#matrix')[0].value);
+    }
+</script>
+
 <div class="row justify-content-between">
     <div class="col-5">
         <h4>Лабораторная работа 1</h4>
@@ -17,25 +23,28 @@
     </div>
 </div>
 <div class="container-fluid">
-    <form asp-route="gauss" method="post">
+    <form asp-route="gauss" method="get" id="form" onsubmit="submit(); return false;">
         <div class="form-group">
             <label for="matrix">Матрица, для которой должна быть решена СЛАУ</label>
-            <input class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c, d, e, f, g">
+            <input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c, d, e, f, g">
             <small id="matrixHelp" class="form-text text-muted">Матрица должна иметь размерность N x (N + 1)</small>
         </div>
-        <button type="submit" class="btn btn-primary">Решить</button>
+        <a href="javascript:submit()" class="btn btn-primary" >Решить</a>
     </form>
 </div>
 <div class="container-fluid">
-    <p>@Model?.Matrix</p>
-    <p>
-        @if (Model != null) {
-            foreach (var a in Model.Solution.Result) {
-                <span>x = @a; </span>
-            }
-        }
-    </p>
-    <p>
-        <span>Det = @(Model?.Solution?.GetDeterminantByGauss() ?? "0")</span>
-    </p>
+    @if (Model == null) {
+        <p>Ожидание ввода...</p>
+    }
+    else if (Model.Matrix == "") {
+        <p>Введена неверная матрица</p>
+    }
+    else if (Model.Solution == null) {
+        <p>Данная система не имеет решений</p>
+    }
+    else {
+        @foreach (var sol in Model.Solution.Result) {
+             <p>$x_1 = @sol$</p>
+         }
+    }
 </div>

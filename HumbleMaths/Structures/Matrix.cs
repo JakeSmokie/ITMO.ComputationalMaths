@@ -71,10 +71,10 @@ namespace HumbleMaths.Structures {
             return ReferenceEquals(this, other) || Equals(_matrix, other._matrix);
         }
 
-        public void SwapRows(int src, int dest) {
+        public void SwapRows(int first, int second) {
             for (var i = 0; i < Width; i++) {
-                (_matrix[src, i], _matrix[dest, i]) =
-                    (_matrix[dest, i], _matrix[src, i]);
+                (_matrix[first, i], _matrix[second, i]) =
+                    (_matrix[second, i], _matrix[first, i]);
             }
         }
 

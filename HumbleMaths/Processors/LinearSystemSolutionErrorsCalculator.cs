@@ -3,10 +3,10 @@ using System.Linq;
 using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
-    public class LinearSystemSolutionChecker {
-        public bool IsSolutionValidForSystem(Matrix<Fraction> system, List<Fraction> solution) {
+    public class LinearSystemSolutionErrorsCalculator {
+        public IEnumerable<Fraction> CalculateErrors(Matrix<Fraction> system, List<Fraction> solution) {
             return Enumerable.Range(0, system.Height)
-                .All(row => GetRowSum(row) == GetFreeElement(row));
+                .Select(row => GetRowSum(row) - GetFreeElement(row));
 
             Fraction GetRowSum(int row) {
                 return Enumerable.Range(0, system.Width - 1)

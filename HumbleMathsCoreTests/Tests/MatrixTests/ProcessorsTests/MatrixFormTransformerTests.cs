@@ -13,7 +13,7 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.ProcessorsTests {
             var input = parser.ParseMatrix("2,1,1,2,1,-1,0,-2,3,-1,2,2");
             var expected = parser.ParseMatrix("2,1,1,2, 0,-3,-1,-6, 0,0,-8,-24");
 
-            var (_, _, result) = transformer.MatrixToTriangular(input);
+            var (_, result) = transformer.MatrixToTriangular(input);
             Assert.True(formChecker.IsMatrixTriangular(result));
         }
     }

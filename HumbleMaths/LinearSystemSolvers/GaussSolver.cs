@@ -8,8 +8,7 @@ namespace HumbleMaths.LinearSystemSolvers {
         private readonly MatrixFormTransformer _formTransformer = new MatrixFormTransformer();
 
         public GaussSolverSolution SolveSystem(Matrix<Fraction> system) {
-            var (stabilizingSteps, eliminationSteps, matrix) =
-                _formTransformer.MatrixToTriangular(system);
+                var (steps, matrix) = _formTransformer.MatrixToTriangular(system);
 
             var solvingSteps = new List<Matrix<Fraction>>();
             var result = new List<Fraction>();
@@ -25,8 +24,7 @@ namespace HumbleMaths.LinearSystemSolvers {
             }
 
             return new GaussSolverSolution {
-                TriangleStabilizingSteps = stabilizingSteps,
-                TriangleEliminationSteps = eliminationSteps,
+                TransformationSteps = steps,
                 SolvingSteps = solvingSteps,
                 Result = result
             };

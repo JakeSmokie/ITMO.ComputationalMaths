@@ -15,31 +15,28 @@ namespace HumbleMathsWeb.Controllers {
             return View();
         }
 
-        [HttpPost("/Maths/Gauss/", Name = "matrix")]
+        [HttpGet("/Maths/Gauss/{Matrix?}", Name = "matrix")]
         public IActionResult Gauss(string matrix) {
             if (matrix == null) {
                 return View();
             }
 
-            Matrix<Fraction> system;
-
-            try {
-                system = _parser.ParseMatrix(matrix);
-            }
-            catch (ArgumentException) {
-                return View();
-            }
-
             var matrixModel = new MatrixModel {
-                Matrix = system.ToString()
+                Matrix = "",
+                Solution = null
             };
 
             try {
+                var system = _parser.ParseMatrix(matrix);
+                matrixModel.Matrix = system.ToString();
+
                 var solution = _solver.SolveSystem(system);
                 matrixModel.Solution = solution;
-            } catch (ArgumentException) {
-                return View();
             }
+            catch {
+                return View(matrixModel);
+            }
+
 
             return View(matrixModel);
         }
