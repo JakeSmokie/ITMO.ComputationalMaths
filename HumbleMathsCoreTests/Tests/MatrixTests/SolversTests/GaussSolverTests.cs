@@ -19,7 +19,6 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.SolversTests {
             var checker = new LinearSystemSolutionErrorsCalculator();
 
             var input = parser.ParseMatrix(system);
-
             var solution = solver.SolveSystem(input);
 
             var expected = expectedResult.Split(',')

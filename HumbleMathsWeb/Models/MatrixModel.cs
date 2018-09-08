@@ -6,5 +6,6 @@ namespace HumbleMathsWeb.Models {
     public class MatrixModel {
         public string Matrix { get; set; }
         public GaussSolverSolution Solution { get; set; }
+        public Matrix<Fraction> System { get; set; }
     }
 }

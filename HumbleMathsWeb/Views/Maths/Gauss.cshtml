@@ -1,4 +1,6 @@
-﻿@model MatrixModel
+﻿@using HumbleMaths.Converters
+@using HumbleMaths.Parsers
+@model MatrixModel
 
 @{
     ViewBag.Title = "Лабораторная работа 1";
@@ -23,28 +25,43 @@
     </div>
 </div>
 <div class="container-fluid">
-    <form asp-route="gauss" method="get" id="form" onsubmit="submit(); return false;">
+    <form asp-route="gauss" method="post" id="form">
         <div class="form-group">
             <label for="matrix">Матрица, для которой должна быть решена СЛАУ</label>
-            <input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c, d, e, f, g">
+            <input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="((a, b, c), (d, e, f), ...)">
             <small id="matrixHelp" class="form-text text-muted">Матрица должна иметь размерность N x (N + 1)</small>
         </div>
-        <a href="javascript:submit()" class="btn btn-primary" >Решить</a>
+        <button type="submit" class="btn btn-primary">Решить</button>
     </form>
 </div>
 <div class="container-fluid">
     @if (Model == null) {
         <p>Ожидание ввода...</p>
-    }
-    else if (Model.Matrix == "") {
+    } else if (Model.Matrix == "") {
         <p>Введена неверная матрица</p>
-    }
-    else if (Model.Solution == null) {
+    } else if (Model.Solution == null) {
         <p>Данная система не имеет решений</p>
-    }
-    else {
-        @foreach (var sol in Model.Solution.Result) {
-             <p>$x_1 = @sol$</p>
-         }
+    } else {
+        var converter = new MatrixLatexConverter();
+
+        <p>Input</p>
+        <p>@converter.ConvertToLatex(Model.System)</p>
+
+        foreach (var step in Model.Solution.TransformationSteps) {
+            <p>@step.Type</p>
+            <p>@converter.ConvertToLatex(step.Matrix)</p>
+        }
+
+        <p>Solving</p>
+        foreach (var step in Model.Solution.SolvingSteps) {
+            <p>@converter.ConvertToLatex(step)</p>
+        }
+
+
+        <p>Result</p>
+        for (var i = 0; i < Model.Solution.Result.Count; i++) {
+            var sol = Model.Solution.Result[i];
+            <p>$x_@(i + 1) = @sol$</p>
+        }
     }
 </div>

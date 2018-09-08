@@ -15,7 +15,12 @@ namespace HumbleMathsWeb.Controllers {
             return View();
         }
 
-        [HttpGet("/Maths/Gauss/{Matrix?}", Name = "matrix")]
+        [Route("/Maths/Gauss")]
+        public IActionResult Gauss() {
+            return View();
+        }
+
+        [HttpPost("/Maths/Gauss", Name = "matrix")]
         public IActionResult Gauss(string matrix) {
             if (matrix == null) {
                 return View();
@@ -28,6 +33,7 @@ namespace HumbleMathsWeb.Controllers {
 
             try {
                 var system = _parser.ParseMatrix(matrix);
+                matrixModel.System = system;
                 matrixModel.Matrix = system.ToString();
 
                 var solution = _solver.SolveSystem(system);
@@ -36,7 +42,6 @@ namespace HumbleMathsWeb.Controllers {
             catch {
                 return View(matrixModel);
             }
-
 
             return View(matrixModel);
         }

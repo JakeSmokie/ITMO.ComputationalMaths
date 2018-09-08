@@ -21,7 +21,10 @@ namespace HumbleMaths.Processors {
                     continue;
                 }
 
+                steps.Add((TransformType.Stabilizing, matrix.CloneMatrix()));
+
                 EliminateItems(matrix, row, column);
+                steps.Add((TransformType.Elimination, matrix.CloneMatrix()));
 
                 row += 1;
                 column += 1;
