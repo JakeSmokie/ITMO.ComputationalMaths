@@ -1,4 +1,5 @@
-﻿using HumbleMaths.Parsers;
+﻿using HumbleMaths.Calculators;
+using HumbleMaths.Parsers;
 using HumbleMaths.Processors;
 using Xunit;
 
