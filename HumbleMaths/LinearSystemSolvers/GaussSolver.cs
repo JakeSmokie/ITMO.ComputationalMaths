@@ -6,14 +6,14 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.LinearSystemSolvers {
     public class GaussSolver {
-        private readonly MatrixTransformer _transformer = new MatrixTransformer();
         private readonly MatrixRedundantRowsEliminator _rowsEliminator = new MatrixRedundantRowsEliminator();
+        private readonly MatrixTransformer _transformer = new MatrixTransformer();
 
         public GaussSolverSolution SolveSystem(Matrix<Fraction> input) {
             var system = _rowsEliminator.EliminateRedundantRows(input);
 
             var solution = new GaussSolverSolution {
-                EliminationStep = system.CloneMatrix(),
+                EliminationStep = system.CloneMatrix()
             };
 
             var (steps, matrix) = _transformer.MatrixToTriangular(system);

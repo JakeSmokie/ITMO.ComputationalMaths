@@ -51,7 +51,7 @@ namespace HumbleMaths.Processors {
             return new Matrix<Fraction>(newMatrix);
         }
 
-        private static HashSet<int> GetRemainingRows(Matrix<Fraction> matrix, 
+        private static HashSet<int> GetRemainingRows(Matrix<Fraction> matrix,
             HashSet<(int, int)> eliminatingRows, HashSet<int> nullRows) {
             var rows = Enumerable.Range(0, matrix.Height)
                 .ToHashSet();

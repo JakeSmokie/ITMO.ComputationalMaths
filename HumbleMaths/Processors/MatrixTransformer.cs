@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using HumbleMaths.Structures;
 
@@ -31,7 +30,8 @@ namespace HumbleMaths.Processors {
                     row += 1;
                     column += 1;
                 }
-            } catch {
+            }
+            catch {
                 return new MatrixTransformationResult {
                     Steps = steps,
                     Result = matrix
