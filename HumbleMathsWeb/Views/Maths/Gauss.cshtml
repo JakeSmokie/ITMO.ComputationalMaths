@@ -20,37 +20,48 @@
         </a>
     </div>
 </div>
-<hr />
+<hr/>
 <div class="container-fluid">
     <form asp-route="gauss" method="post" id="form">
         <div class="form-group">
             <label for="matrix">Матрица, для которой должна быть решена СЛАУ</label>
-            <input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c; d, e, f; ...">
+
+            @*<input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c; d, e, f; ...">*@
+            <textarea class="form-control" rows="5" id="matrix" asp-for="Input" plac></textarea>
+
             <small id="matrixHelp" class="form-text text-muted">Элементы указываются через запятую, строки матрицы делятся точкой с запятой</small>
         </div>
         <button type="submit" class="btn btn-primary">Решить</button>
     </form>
 </div>
-<hr />
+<hr/>
 <div class="container-fluid" style="text-align: center">
     @if (Model == null) {
         <h5>Ожидание ввода...</h5>
-    } else if (Model.System == null) {
+        return;
+    }
+    @if (Model.System == null) {
         <h5>Введена неверная матрица</h5>
-    } else if (Model.Solution == null) {
+        return;
+    }
+    @if (Model.Solution == null) {
         <h5>Данная система не имеет решений</h5>
-    } else {
+        return;
+    }
+
+    @{
         var converter = new MatrixLatexConverter();
         var clamper = new MatrixClamper();
         var determinantCalculator = new MatrixDeterminantCalculator();
         var errorsCalculator = new LinearSystemSolutionErrorsCalculator();
+    }
 
-        <h5>Затрачено времени на расчёт</h5>
-        <p>@Model.Stopwatch.Elapsed</p>
+    <h5>Затрачено времени на расчёт</h5>
+    <p>@Model.Stopwatch.Elapsed</p>
 
-        <h5>Введённая матрица</h5>
-        <p>$@converter.ConvertToLatex(Model.System)$</p>
-
+    <h5>Введённая матрица</h5>
+    <p>$@converter.ConvertToLatex(Model.System)$</p>
+    @{
         var stepMatrix = Model.Solution.EliminationStep ?? Model.System;
 
         if (!stepMatrix.StringEquals(Model.System)) {
@@ -72,7 +83,8 @@
 
         if (Model.Solution.Result.Count > 0) {
             <h5>Результат</h5>
-        } else {
+        }
+        else {
             <h5>Решение отсутствует</h5>
         }
 
@@ -99,7 +111,8 @@
             <h5>Определитель через разложения по строкам</h5>
             if (matrix.Width < 20) {
                 <p>$det @converter.ConvertToLatex(matrix, false) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
-            } else {
+            }
+            else {
                 <p>...</p>
             }
 
@@ -114,4 +127,5 @@
             }
         }
     }
+
 </div>

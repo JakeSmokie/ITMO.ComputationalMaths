@@ -10,7 +10,10 @@ namespace HumbleMaths.Parsers {
             var numbers = new List<Fraction>();
 
             try {
-                var rows = input.TrimEnd(' ', ';')
+                var rows = input
+                    .Replace('\r', ' ')
+                    .Replace('\n', ' ')
+                    .TrimEnd(' ', ';')
                     .Split(';')
                     .Select(ParseRow)
                     .ToList();

@@ -2,6 +2,6 @@
 
 namespace HumbleMaths.Calculators {
     public interface IIntegralCalculator {
-        double Calculate(Func<double, double> func, double start, double end);
+        (double Integral, int PartsAmount) Calculate(Func<double, double> func, double start, double end);
     }
 }

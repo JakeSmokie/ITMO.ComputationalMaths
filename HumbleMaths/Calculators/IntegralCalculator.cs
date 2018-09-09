@@ -9,7 +9,7 @@ namespace HumbleMaths.Calculators {
             _precision = precision;
         }
 
-        public double Calculate(Func<double, double> func, double start, double end) {
+        public (double Integral, int PartsAmount) Calculate(Func<double, double> func, double start, double end) {
             var resultMultiplier = 1;
 
             if (start > end) {
@@ -19,10 +19,15 @@ namespace HumbleMaths.Calculators {
 
             var partsAmount = (int) ((end - start) / _precision);
 
-            return Enumerable.Range(0, partsAmount)
-                .AsParallel()
-                .Select(x => func(start + x * _precision) * _precision)
-                .Sum() * resultMultiplier;
+            if (partsAmount < 0) {
+                partsAmount = 0;
+            }
+
+            return (Enumerable.Range(0, partsAmount)
+                        .AsParallel()
+                        .Sum(x => func(start + x * _precision) * _precision) *
+                    resultMultiplier,
+                partsAmount);
         }
     }
 }

@@ -13,6 +13,10 @@ namespace HumbleMaths.Parsers {
             };
 
         public Func<double, double> ParseLambda(string function) {
+            foreach (var (key, value) in _aliases) {
+                function = function.Replace(key, value);
+            }
+
             var parameters = new[] {
                 Expression.Parameter(typeof(double), "x")
             };

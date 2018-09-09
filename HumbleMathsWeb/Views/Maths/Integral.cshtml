@@ -1,4 +1,5 @@
-﻿@model IntegralModel
+﻿@using System.Globalization
+@model IntegralModel
 @{
     ViewBag.Title = "Лабораторная работа 2";
     Layout = "_Layout";
@@ -15,26 +16,48 @@
         </a>
     </div>
 </div>
-<hr />
+<hr/>
 <div class="container-fluid">
     <form asp-route="Integral" method="post" id="form">
         <div class="form-group">
             <label style="margin: 10px" for="function">Функция вида $f(x)$</label>
-            <input type="text" asp-for="Function" class="form-control" name="function" id="function" placeholder="x, sin(x), pow(x, 3), etc.">
+            <input type="text" asp-for="FunctionExpression" class="form-control" name="FunctionExpression" id="function" placeholder="x, sin(x), pow(x, 3), etc.">
 
             <label style="margin: 10px" for="function">Начало отрезка интегрирования</label>
-            <input type="number" asp-for="Start" class="form-control" name="start" id="start">
+            <input type="text" asp-for="StartAsText" class="form-control" name="StartAsText" id="start">
 
             <label style="margin: 10px" for="function">Конец отрезка интегрирования</label>
-            <input type="number" asp-for="End" class="form-control" name="end" id="end">
+            <input type="text" asp-for="EndAsText" class="form-control" name="EndAsText" id="end">
 
             <label style="margin: 10px" for="function">Точность вычисления</label>
-            <input type="number" asp-for="Precision" class="form-control" name="precision" id="precision">
+            <input type="text" asp-for="PrecisionAsText" class="form-control" name="PrecisionAsText" id="precision">
         </div>
         <button type="submit" class="btn btn-primary">Решить</button>
     </form>
 </div>
-<hr />
+<hr/>
 <div class="container-fluid" style="text-align: center">
-    <p>FUCK</p>
+    @if (Model.Func == null) {
+        <h5>Ожидание ввода..</h5>
+        return;
+    }
+
+    @if (Model.Precision < 0 || Model.Precision > Math.Abs(Model.End - Model.Start)) {
+        <h5>Введено неверное значение точности</h5>
+        return;
+    }
+
+    <h5>Введённая функция</h5>
+    <p>$f(x) = @Model.FunctionExpression$</p>
+
+    @{
+        var sum = $@"\sum\limits_{{i=1}}^{{{Model.PartsAmount}}}";
+        sum += $" f({Model.StartAsText} + {Model.PrecisionAsText} * i) * {Model.PrecisionAsText} ";
+    }
+
+    <h5>Результат</h5>
+    <p>$\int_{@Model.StartAsText}^{@Model.EndAsText} f(x) \ dx = @sum \approx @Model.IntegralValue.ToString(CultureInfo.InvariantCulture)$</p>
+
+    <h5>Время, затраченное на исчисление</h5>
+    <p>@Model.CalculationTime</p>
 </div>
