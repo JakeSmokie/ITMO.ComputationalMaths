@@ -1,4 +1,7 @@
-﻿using HumbleMaths.Structures;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class MatrixDeterminantCalculator {
@@ -17,14 +20,22 @@ namespace HumbleMaths.Processors {
 
         private Fraction CalculateDeterminantUsingMinors(Matrix<Fraction> squareMatrix) {
             var determinant = new Fraction(0);
+            var partitioner = Partitioner.Create(0, squareMatrix.Width);
 
-            for (var column = 0; column < squareMatrix.Width; column++) {
-                var minor = _minorCalculator.GetMinor(squareMatrix, 0, column);
-                var multiplier = column % 2 == 0 ? 1 : -1;
+            var localLock = new object();
 
-                determinant += CalculateDeterminant(minor) *
-                               squareMatrix[0, column] * multiplier;
-            }
+            Parallel.ForEach(partitioner, range => {
+                for (var column = range.Item1; column < range.Item2; column++) {
+                    var minor = _minorCalculator.GetMinor(squareMatrix, 0, column);
+                    var multiplier = column % 2 == 0 ? 1 : -1;
+                    var minorDet = CalculateDeterminant(minor) * squareMatrix[0, column] * multiplier;
+
+                    lock (localLock) {
+                        determinant += minorDet;
+                    }
+                }
+            });
+
 
             return determinant;
         }

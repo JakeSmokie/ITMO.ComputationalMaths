@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using HumbleMaths.Processors;
 using HumbleMaths.Structures;
 
@@ -38,6 +40,7 @@ namespace HumbleMaths.LinearSystemSolvers {
                 }
             }
             catch {
+                // TODO: deal with it
                 // ignored
             }
             finally {
@@ -63,16 +66,28 @@ namespace HumbleMaths.LinearSystemSolvers {
                 throw new ArgumentException("System has no unique solutions");
             }
 
-            for (var column = 0; column < matrix.Width; column++) {
-                matrix[row, column] /= divider;
-            }
+            var partitioner = Partitioner.Create(0, matrix.Width);
+
+            Parallel.ForEach(partitioner, range => {
+                for (var column = range.Item1; column < range.Item2; column++) {
+                    matrix[row, column] /= divider;
+                }
+            });
         }
 
         private static void EliminateRowMainDiagonalElement(Matrix<Fraction> matrix, int row) {
-            for (var destRow = 0; destRow < row; destRow++) {
-                matrix[destRow, matrix.Width - 1] -= matrix[destRow, row] * matrix[row, matrix.Width - 1];
-                matrix[destRow, row] = 0;
+            if (row == 0) {
+                return;
             }
+
+            var partitioner = Partitioner.Create(0, row);
+
+            Parallel.ForEach(partitioner, range => {
+                for (var destRow = range.Item1; destRow < range.Item2; destRow++) {
+                    matrix[destRow, matrix.Width - 1] -= matrix[destRow, row] * matrix[row, matrix.Width - 1];
+                    matrix[destRow, row] = 0;
+                }
+            });
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
@@ -78,9 +80,13 @@ namespace HumbleMaths.Processors {
                 var mul = matrix[i, column] / matrix[row, column];
                 matrix[i, column] = 0;
 
-                for (var j = column + 1; j < matrix.Width; j++) {
-                    matrix[i, j] -= matrix[row, j] * mul;
-                }
+                var partitioner = Partitioner.Create(column + 1, matrix.Width);
+
+                Parallel.ForEach(partitioner, range => {
+                    for (var j = range.Item1; j < range.Item2; j++) {
+                        matrix[i, j] -= matrix[row, j] * mul;
+                    }
+                });
             }
         }
     }
