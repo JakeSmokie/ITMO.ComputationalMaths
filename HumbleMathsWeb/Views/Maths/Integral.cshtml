@@ -1,0 +1,40 @@
+﻿@model IntegralModel
+@{
+    ViewBag.Title = "Лабораторная работа 2";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-between">
+    <div class="col-5">
+        <h4>Вычисление определённого интеграла</h4>
+    </div>
+    <div class="col-1">
+        <a asp-area="" asp-controller="Maths" asp-action="Index"
+           class="btn btn-dark">
+            Назад
+        </a>
+    </div>
+</div>
+<hr />
+<div class="container-fluid">
+    <form asp-route="Integral" method="post" id="form">
+        <div class="form-group">
+            <label style="margin: 10px" for="function">Функция вида $f(x)$</label>
+            <input type="text" asp-for="Function" class="form-control" name="function" id="function" placeholder="x, sin(x), pow(x, 3), etc.">
+
+            <label style="margin: 10px" for="function">Начало отрезка интегрирования</label>
+            <input type="number" asp-for="Start" class="form-control" name="start" id="start">
+
+            <label style="margin: 10px" for="function">Конец отрезка интегрирования</label>
+            <input type="number" asp-for="End" class="form-control" name="end" id="end">
+
+            <label style="margin: 10px" for="function">Точность вычисления</label>
+            <input type="number" asp-for="Precision" class="form-control" name="precision" id="precision">
+        </div>
+        <button type="submit" class="btn btn-primary">Решить</button>
+    </form>
+</div>
+<hr />
+<div class="container-fluid" style="text-align: center">
+    <p>FUCK</p>
+</div>

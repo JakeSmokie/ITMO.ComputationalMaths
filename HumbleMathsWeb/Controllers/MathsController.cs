@@ -49,5 +49,13 @@ namespace HumbleMathsWeb.Controllers {
             matrixModel.Stopwatch.Stop();
             return View(matrixModel);
         }
+        
+        [Route("/Maths/Integral")]
+        [HttpPost("/Maths/Integral", Name = "Integral")]
+        public IActionResult Integral(IntegralModel model) {
+            
+
+            return View();
+        }
     }
 }
