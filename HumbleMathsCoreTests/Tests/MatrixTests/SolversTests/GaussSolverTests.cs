@@ -2,7 +2,6 @@
 using System.Linq;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
-using HumbleMaths.Processors;
 using HumbleMaths.Structures;
 using Xunit;
 

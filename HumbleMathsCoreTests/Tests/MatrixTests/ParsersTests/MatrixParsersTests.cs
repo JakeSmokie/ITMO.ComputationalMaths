@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
 using Xunit;
 

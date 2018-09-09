@@ -22,7 +22,6 @@ namespace HumbleMaths.Processors {
                     .Skip(row * matrix.Width)
                     .Take(row);
             }
-
         }
     }
 }

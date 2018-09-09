@@ -11,6 +11,7 @@ namespace HumbleMaths.LinearSystemSolvers {
 
         public GaussSolverSolution SolveSystem(Matrix<Fraction> input) {
             var system = _rowsEliminator.EliminateRedundantRows(input);
+
             var solution = new GaussSolverSolution {
                 EliminationStep = system.CloneMatrix()
             };

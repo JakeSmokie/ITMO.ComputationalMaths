@@ -6,6 +6,7 @@ namespace HumbleMaths.Converters {
     public class MatrixLatexConverter {
         public string ConvertToLatex<T>(Matrix<T> matrix) {
             var style = "{}";
+
             if (matrix.Height != matrix.Width) {
                 style = "{" + string.Concat(Enumerable.Repeat("r", matrix.Width - 1)) + "|r}";
             }

@@ -12,6 +12,7 @@ namespace HumbleMaths.LinearSystemSolvers {
 
         public Fraction GetDeterminantByGauss() {
             var stabilizingStepsCount = TransformationSteps.Count(x => x.Type == TransformType.Stabilizing);
+
             var matrix = TransformationSteps
                 .Last(x => x.Type == TransformType.Elimination).Matrix;
 
