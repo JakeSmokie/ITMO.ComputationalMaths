@@ -10,21 +10,23 @@ namespace HumbleMaths.Processors {
         /// <exception cref="ArgumentException">Threw if matrix cannot be transformed</exception>
         public MatrixTransformationResult MatrixToTriangular(Matrix<Fraction> input) {
             var matrix = input.CloneMatrix();
+            var startMatrix = input.CloneMatrix();
             var steps = new List<(TransformType Type, Matrix<Fraction> Matrix)>();
 
             var row = 0;
             var column = 0;
 
             while (row < matrix.Height && column < matrix.Width) {
-                if (!StabilizeRowEchelon(matrix, row, column)) {
+                if (!StabilizeRowEchelon(matrix, row, column, steps)) {
                     column += 1;
                     continue;
                 }
 
-                steps.Add((TransformType.Stabilizing, matrix.CloneMatrix()));
-
                 EliminateItems(matrix, row, column);
-                steps.Add((TransformType.Elimination, matrix.CloneMatrix()));
+
+                if (!matrix.StringEquals(steps.LastOrDefault().Matrix)) {
+                    steps.Add((TransformType.Elimination, matrix.CloneMatrix()));
+                }
 
                 row += 1;
                 column += 1;
@@ -48,7 +50,8 @@ namespace HumbleMaths.Processors {
             return max;
         }
 
-        private static bool StabilizeRowEchelon(Matrix<Fraction> matrix, int row, int column) {
+        private static bool StabilizeRowEchelon(Matrix<Fraction> matrix, int row, int column,
+            List<(TransformType Type, Matrix<Fraction> Matrix)> steps) {
             var maxRow = GetMaxIndexOfColumn(matrix, row, column);
 
             if (matrix[maxRow, column].IsZero()) {
@@ -56,6 +59,11 @@ namespace HumbleMaths.Processors {
             }
 
             matrix.SwapRows(maxRow, row);
+
+            if (maxRow != row) {
+                steps.Add((TransformType.Stabilizing, matrix.CloneMatrix()));
+            }
+
             return true;
         }
 

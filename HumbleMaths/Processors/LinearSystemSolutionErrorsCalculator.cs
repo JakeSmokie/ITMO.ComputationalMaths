@@ -4,9 +4,10 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
     public class LinearSystemSolutionErrorsCalculator {
-        public IEnumerable<Fraction> CalculateErrors(Matrix<Fraction> system, List<Fraction> solution) {
+        public List<Fraction> CalculateErrors(Matrix<Fraction> system, List<Fraction> solution) {
             return Enumerable.Range(0, system.Height)
-                .Select(row => GetRowSum(row) - GetFreeElement(row));
+                .Select(row => GetRowSum(row) - GetFreeElement(row))
+                .ToList();
 
             Fraction GetRowSum(int row) {
                 return Enumerable.Range(0, system.Width - 1)

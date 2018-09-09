@@ -6,9 +6,19 @@ using HumbleMaths.Structures;
 namespace HumbleMaths.LinearSystemSolvers {
     public class GaussSolver {
         private readonly MatrixFormTransformer _formTransformer = new MatrixFormTransformer();
+        private readonly MatrixRedundantRowsEliminator _rowsEliminator = new MatrixRedundantRowsEliminator();
 
-        public GaussSolverSolution SolveSystem(Matrix<Fraction> system) {
-                var (steps, matrix) = _formTransformer.MatrixToTriangular(system);
+        public GaussSolverSolution SolveSystem(Matrix<Fraction> input) {
+            var system = _rowsEliminator.EliminateRedundantRows(input);
+            var solution = new GaussSolverSolution {
+                EliminationStep = system.CloneMatrix()
+            };
+
+            if (system.Width != system.Height + 1) {
+                throw new ArgumentException("Not suitable system was inputted");
+            }
+
+            var (steps, matrix) = _formTransformer.MatrixToTriangular(system);
 
             var solvingSteps = new List<Matrix<Fraction>>();
             var result = new List<Fraction>();
@@ -23,11 +33,11 @@ namespace HumbleMaths.LinearSystemSolvers {
                 result.Insert(0, matrix[row, matrix.Width - 1]);
             }
 
-            return new GaussSolverSolution {
-                TransformationSteps = steps,
-                SolvingSteps = solvingSteps,
-                Result = result
-            };
+            solution.TransformationSteps = steps;
+            solution.SolvingSteps = solvingSteps;
+            solution.Result = result;
+
+            return solution;
         }
 
         private static void DivideRowByMainDiagonalElement(Matrix<Fraction> matrix, int row) {

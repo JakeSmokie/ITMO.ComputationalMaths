@@ -115,5 +115,10 @@ namespace HumbleMaths.Structures {
 
             return s;
         }
+
+        // TODO: Fix hack
+        public bool StringEquals(Matrix<T> other) {
+            return ToString() == other?.ToString();
+        }
     }
 }

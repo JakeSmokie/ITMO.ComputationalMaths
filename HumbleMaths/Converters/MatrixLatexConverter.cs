@@ -20,7 +20,7 @@ namespace HumbleMaths.Converters {
             stringBuilder.Append(string.Join(@" \\ ", rows));
             stringBuilder.Append(@"\end{array}}\right)");
 
-            return $"${stringBuilder}$";
+            return stringBuilder.ToString();
         }
     }
 }

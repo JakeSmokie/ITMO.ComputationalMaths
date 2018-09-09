@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HumbleMathsWeb.Controllers {
     public class MathsController : Controller {
-        private readonly MatrixAsLinearSystemParser _parser = new MatrixAsLinearSystemParser();
+        private readonly MatrixParser _parser = new MatrixParser();
         private readonly GaussSolver _solver = new GaussSolver();
 
         public IActionResult Index() {

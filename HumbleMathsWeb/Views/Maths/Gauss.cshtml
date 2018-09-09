@@ -1,5 +1,6 @@
 ﻿@using HumbleMaths.Converters
 @using HumbleMaths.Parsers
+@using HumbleMaths.Processors
 @model MatrixModel
 
 @{
@@ -34,34 +35,68 @@
         <button type="submit" class="btn btn-primary">Решить</button>
     </form>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" style="text-align: center">
     @if (Model == null) {
-        <p>Ожидание ввода...</p>
+        <h5>Ожидание ввода...</h5>
     } else if (Model.Matrix == "") {
-        <p>Введена неверная матрица</p>
+        <h5>Введена неверная матрица</h5>
     } else if (Model.Solution == null) {
-        <p>Данная система не имеет решений</p>
+        <h5>Данная система не имеет решений</h5>
     } else {
         var converter = new MatrixLatexConverter();
+        var clamper = new MatrixClamper();
+        var determinantCalculator = new MatrixDeterminantCalculator();
+        var errorsCalculator = new LinearSystemSolutionErrorsCalculator();
 
-        <p>Input</p>
-        <p>@converter.ConvertToLatex(Model.System)</p>
+        <h5>Введённая матрица</h5>
+        <p>$@converter.ConvertToLatex(Model.System)$</p>
+
+        var stepMatrix = Model.Solution.EliminationStep ?? Model.System;
+
+        if (!stepMatrix.Equals(Model.System)) {
+            <h5>Уничтожение линейно-зависимых и пустых строк</h5>
+            <p>$@converter.ConvertToLatex(stepMatrix)$</p>
+        }
 
         foreach (var step in Model.Solution.TransformationSteps) {
-            <p>@step.Type</p>
-            <p>@converter.ConvertToLatex(step.Matrix)</p>
+            <h5>@(step.Type == TransformType.Stabilizing ? "Стабилизация" : "Уничтожение элементов под диагональю")</h5>
+            <p>$@converter.ConvertToLatex(step.Matrix)$</p>
         }
 
-        <p>Solving</p>
+        <h5>Решение</h5>
         foreach (var step in Model.Solution.SolvingSteps) {
-            <p>@converter.ConvertToLatex(step)</p>
+            <p>$@converter.ConvertToLatex(step)$</p>
         }
 
 
-        <p>Result</p>
+        <h5>Результат</h5>
         for (var i = 0; i < Model.Solution.Result.Count; i++) {
             var sol = Model.Solution.Result[i];
             <p>$x_@(i + 1) = @sol$</p>
+        }
+
+        var matrix = clamper.ClampMatrixToSquare(stepMatrix);
+        var steps = Model.Solution.TransformationSteps;
+        var lastStep = steps.Last().Matrix;
+        var lastStepClamped = clamper.ClampMatrixToSquare(lastStep);
+        var multiplier = steps.Count(x => x.Type == TransformType.Stabilizing) % 2 == 1 ? " * -1 " : "";
+
+        <h5>Определитель по гауссу</h5>
+        <p>
+            $det @converter.ConvertToLatex(lastStepClamped)
+            = @(string.Join(" * ", lastStepClamped.MainDiagonalItems) + multiplier)
+            = @Model.Solution.GetDeterminantByGauss()$
+        </p>
+        <h5>Определитель через разложения по строкам</h5>
+        <p>$det @converter.ConvertToLatex(matrix) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
+
+        <h5>Погрешности</h5>
+
+        var errors = errorsCalculator.CalculateErrors(stepMatrix, Model.Solution.Result);
+
+        for (var i = 0; i < errors.Count; i++) {
+            var error = errors[i];
+            <p>$\Delta_@(i + 1) = @error$</p>
         }
     }
 </div>
