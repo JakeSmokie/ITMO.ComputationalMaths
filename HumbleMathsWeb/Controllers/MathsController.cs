@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
 using HumbleMaths.Structures;
@@ -27,8 +28,11 @@ namespace HumbleMathsWeb.Controllers {
             }
 
             var matrixModel = new MatrixModel {
-                Solution = null
+                Solution = null,
+                Stopwatch = new Stopwatch()
             };
+
+            matrixModel.Stopwatch.Start();
 
             try {
                 var system = _parser.ParseMatrix(matrix);
@@ -36,10 +40,13 @@ namespace HumbleMathsWeb.Controllers {
 
                 var solution = _solver.SolveSystem(system);
                 matrixModel.Solution = solution;
-            } catch {
+            }
+            catch {
+                matrixModel.Stopwatch.Stop();
                 return View(matrixModel);
             }
 
+            matrixModel.Stopwatch.Stop();
             return View(matrixModel);
         }
     }

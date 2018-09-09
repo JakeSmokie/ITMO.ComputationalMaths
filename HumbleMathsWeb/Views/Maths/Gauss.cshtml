@@ -24,7 +24,7 @@
         <div class="form-group">
             <label for="matrix">Матрица, для которой должна быть решена СЛАУ</label>
             <input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c; d, e, f; ...">
-            <small id="matrixHelp" class="form-text text-muted">Матрица должна иметь размерность N x (N + 1)</small>
+            <small id="matrixHelp" class="form-text text-muted">Элементы указываются через запятую, строки матрицы делятся точкой с запятой</small>
         </div>
         <button type="submit" class="btn btn-primary">Решить</button>
     </form>
@@ -32,18 +32,18 @@
 <div class="container-fluid" style="text-align: center">
     @if (Model == null) {
         <h5>Ожидание ввода...</h5>
-    }
-    else if (Model.System == null) {
+    } else if (Model.System == null) {
         <h5>Введена неверная матрица</h5>
-    }
-    else if (Model.Solution == null) {
+    } else if (Model.Solution == null) {
         <h5>Данная система не имеет решений</h5>
-    }
-    else {
+    } else {
         var converter = new MatrixLatexConverter();
         var clamper = new MatrixClamper();
         var determinantCalculator = new MatrixDeterminantCalculator();
         var errorsCalculator = new LinearSystemSolutionErrorsCalculator();
+
+        <h5>Затрачено времени на расчёт</h5>
+        <p>@Model.Stopwatch.Elapsed</p>
 
         <h5>Введённая матрица</h5>
         <p>$@converter.ConvertToLatex(Model.System)$</p>
@@ -69,8 +69,7 @@
 
         if (Model.Solution.Result.Count > 0) {
             <h5>Результат</h5>
-        }
-        else {
+        } else {
             <h5>Решение отсутствует</h5>
         }
 
@@ -91,11 +90,15 @@
             <h5>Определитель по гауссу</h5>
             <p>
                 $det @(converter.ConvertToLatex(lastStepClamped) + multiplier)
-                = @(string.Join(" * ", lastStepClamped.MainDiagonalItems) + multiplier)
-                = @Model.Solution.GetDeterminantByGauss()$
+                = @(string.Join(" * ", lastStepClamped.MainDiagonalItems) + multiplier) = @Model.Solution.GetDeterminantByGauss()$
             </p>
+
             <h5>Определитель через разложения по строкам</h5>
-            <p>$det @converter.ConvertToLatex(matrix) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
+            if (matrix.Width < 20) {
+                <p>$det @converter.ConvertToLatex(matrix) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
+            } else {
+                <p>...</p>
+            }
 
             if (Model.Solution.Result.Count > 0) {
                 <h5>Погрешности</h5>

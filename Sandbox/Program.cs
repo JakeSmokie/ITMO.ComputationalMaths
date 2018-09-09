@@ -3,7 +3,7 @@
 namespace Sandbox {
     internal class Program {
         private static void Main(string[] args) {
-            var height = 10;
+            var height = 20;
 
             var rows = Enumerable.Range(0, height)
                 .Select(row => Enumerable.Range(0, height + 1)
