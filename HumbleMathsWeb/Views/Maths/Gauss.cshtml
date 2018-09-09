@@ -89,13 +89,13 @@
 
             <h5>Определитель по гауссу</h5>
             <p>
-                $det @(converter.ConvertToLatex(lastStepClamped) + multiplier)
+                $det @(converter.ConvertToLatex(lastStepClamped, false) + multiplier)
                 = @(string.Join(" * ", lastStepClamped.MainDiagonalItems) + multiplier) = @Model.Solution.GetDeterminantByGauss()$
             </p>
 
             <h5>Определитель через разложения по строкам</h5>
             if (matrix.Width < 20) {
-                <p>$det @converter.ConvertToLatex(matrix) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
+                <p>$det @converter.ConvertToLatex(matrix, false) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
             } else {
                 <p>...</p>
             }

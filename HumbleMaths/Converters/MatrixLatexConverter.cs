@@ -4,10 +4,10 @@ using HumbleMaths.Structures;
 
 namespace HumbleMaths.Converters {
     public class MatrixLatexConverter {
-        public string ConvertToLatex<T>(Matrix<T> matrix) {
+        public string ConvertToLatex<T>(Matrix<T> matrix, bool overrideCheck = true) {
             var style = "{}";
 
-            if (matrix.Height != matrix.Width) {
+            if (matrix.Width != 1 && (matrix.Height != matrix.Width || overrideCheck)) {
                 style = "{" + string.Concat(Enumerable.Repeat("r", matrix.Width - 1)) + "|r}";
             }
 
