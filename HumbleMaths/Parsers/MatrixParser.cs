@@ -10,7 +10,8 @@ namespace HumbleMaths.Parsers {
             var numbers = new List<Fraction>();
 
             try {
-                var rows = input.Split(';')
+                var rows = input.TrimEnd(' ', ';')
+                    .Split(';')
                     .Select(ParseRow)
                     .ToList();
 
@@ -18,6 +19,7 @@ namespace HumbleMaths.Parsers {
 
                 var width = rows.First().Count();
                 var height = rows.Count;
+
                 return CreateMatrix(numbers, width, height);
             }
             catch (Exception e) {

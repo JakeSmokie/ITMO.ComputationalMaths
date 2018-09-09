@@ -5,8 +5,8 @@ using System.Linq;
 
 namespace HumbleMaths.Structures {
     public class Matrix<T> : IEnumerable<T>, IEquatable<Matrix<T>>, ICloneable {
-        public const int MaxWidth = 21;
-        public const int MaxHeight = 20;
+        public const int MaxWidth = 100;
+        public const int MaxHeight = 100;
 
         private readonly T[,] _matrix;
 

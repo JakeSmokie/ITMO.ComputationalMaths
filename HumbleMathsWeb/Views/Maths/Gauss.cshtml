@@ -8,12 +8,6 @@
     Layout = "_Layout";
 }
 
-<script type="text/javascript">
-    function submit() {
-        window.location.replace("/Maths/Gauss/" + $('#matrix')[0].value);
-    }
-</script>
-
 <div class="row justify-content-between">
     <div class="col-5">
         <h4>Решение СЛАУ методом Гаусса</h4>
@@ -38,11 +32,14 @@
 <div class="container-fluid" style="text-align: center">
     @if (Model == null) {
         <h5>Ожидание ввода...</h5>
-    } else if (Model.Matrix == "") {
+    }
+    else if (Model.System == null) {
         <h5>Введена неверная матрица</h5>
-    } else if (Model.Solution == null) {
+    }
+    else if (Model.Solution == null) {
         <h5>Данная система не имеет решений</h5>
-    } else {
+    }
+    else {
         var converter = new MatrixLatexConverter();
         var clamper = new MatrixClamper();
         var determinantCalculator = new MatrixDeterminantCalculator();
@@ -53,7 +50,7 @@
 
         var stepMatrix = Model.Solution.EliminationStep ?? Model.System;
 
-        if (!stepMatrix.Equals(Model.System)) {
+        if (!stepMatrix.StringEquals(Model.System)) {
             <h5>Уничтожение линейно-зависимых и пустых строк</h5>
             <p>$@converter.ConvertToLatex(stepMatrix)$</p>
         }
@@ -63,13 +60,20 @@
             <p>$@converter.ConvertToLatex(step.Matrix)$</p>
         }
 
-        <h5>Решение</h5>
+        if (Model.Solution.SolvingSteps.Count > 0) {
+            <h5>Решение</h5>
+        }
         foreach (var step in Model.Solution.SolvingSteps) {
             <p>$@converter.ConvertToLatex(step)$</p>
         }
 
+        if (Model.Solution.Result.Count > 0) {
+            <h5>Результат</h5>
+        }
+        else {
+            <h5>Решение отсутствует</h5>
+        }
 
-        <h5>Результат</h5>
         for (var i = 0; i < Model.Solution.Result.Count; i++) {
             var sol = Model.Solution.Result[i];
             <p>$x_@(i + 1) = @sol$</p>
@@ -77,26 +81,31 @@
 
         var matrix = clamper.ClampMatrixToSquare(stepMatrix);
         var steps = Model.Solution.TransformationSteps;
-        var lastStep = steps.Last().Matrix;
-        var lastStepClamped = clamper.ClampMatrixToSquare(lastStep);
-        var multiplier = steps.Count(x => x.Type == TransformType.Stabilizing) % 2 == 1 ? " * -1 " : "";
+        var lastStep = steps.LastOrDefault().Matrix;
 
-        <h5>Определитель по гауссу</h5>
-        <p>
-            $det @(converter.ConvertToLatex(lastStepClamped) + multiplier)
-            = @(string.Join(" * ", lastStepClamped.MainDiagonalItems) + multiplier)
-            = @Model.Solution.GetDeterminantByGauss()$
-        </p>
-        <h5>Определитель через разложения по строкам</h5>
-        <p>$det @converter.ConvertToLatex(matrix) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
 
-        <h5>Погрешности</h5>
+        if (lastStep != null) {
+            var lastStepClamped = clamper.ClampMatrixToSquare(lastStep);
+            var multiplier = steps.Count(x => x.Type == TransformType.Stabilizing) % 2 == 1 ? " * -1 " : "";
 
-        var errors = errorsCalculator.CalculateErrors(stepMatrix, Model.Solution.Result);
+            <h5>Определитель по гауссу</h5>
+            <p>
+                $det @(converter.ConvertToLatex(lastStepClamped) + multiplier)
+                = @(string.Join(" * ", lastStepClamped.MainDiagonalItems) + multiplier)
+                = @Model.Solution.GetDeterminantByGauss()$
+            </p>
+            <h5>Определитель через разложения по строкам</h5>
+            <p>$det @converter.ConvertToLatex(matrix) = @determinantCalculator.CalculateDeterminant(matrix)$</p>
 
-        for (var i = 0; i < errors.Count; i++) {
-            var error = errors[i];
-            <p>$\Delta_@(i + 1) = @error$</p>
+            if (Model.Solution.Result.Count > 0) {
+                <h5>Погрешности</h5>
+                var errors = errorsCalculator.CalculateErrors(stepMatrix, Model.Solution.Result);
+
+                for (var i = 0; i < errors.Count; i++) {
+                    var error = errors[i];
+                    <p>$\Delta_@(i + 1) = @error$</p>
+                }
+            }
         }
     }
 </div>

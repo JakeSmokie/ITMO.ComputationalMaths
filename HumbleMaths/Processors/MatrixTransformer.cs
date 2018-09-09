@@ -4,10 +4,9 @@ using System.Linq;
 using HumbleMaths.Structures;
 
 namespace HumbleMaths.Processors {
-    public class MatrixFormTransformer {
+    public class MatrixTransformer {
         private readonly MatrixFormChecker _formChecker = new MatrixFormChecker();
 
-        /// <exception cref="ArgumentException">Threw if matrix cannot be transformed</exception>
         public MatrixTransformationResult MatrixToTriangular(Matrix<Fraction> input) {
             var matrix = input.CloneMatrix();
             var startMatrix = input.CloneMatrix();
@@ -16,20 +15,27 @@ namespace HumbleMaths.Processors {
             var row = 0;
             var column = 0;
 
-            while (row < matrix.Height && column < matrix.Width) {
-                if (!StabilizeRowEchelon(matrix, row, column, steps)) {
+            try {
+                while (row < matrix.Height && column < matrix.Width) {
+                    if (!StabilizeRowEchelon(matrix, row, column, steps)) {
+                        column += 1;
+                        continue;
+                    }
+
+                    EliminateItems(matrix, row, column);
+
+                    if (!matrix.StringEquals(steps.LastOrDefault().Matrix ?? startMatrix)) {
+                        steps.Add((TransformType.Elimination, matrix.CloneMatrix()));
+                    }
+
+                    row += 1;
                     column += 1;
-                    continue;
                 }
-
-                EliminateItems(matrix, row, column);
-
-                if (!matrix.StringEquals(steps.LastOrDefault().Matrix)) {
-                    steps.Add((TransformType.Elimination, matrix.CloneMatrix()));
-                }
-
-                row += 1;
-                column += 1;
+            } catch {
+                return new MatrixTransformationResult {
+                    Steps = steps,
+                    Result = matrix
+                };
             }
 
             return new MatrixTransformationResult {

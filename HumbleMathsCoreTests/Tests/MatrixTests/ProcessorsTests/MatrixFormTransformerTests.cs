@@ -7,7 +7,7 @@ namespace HumbleMathsCoreTests.Tests.MatrixTests.ProcessorsTests {
         [Fact]
         public void TestFormTransformer() {
             var parser = new MatrixParser();
-            var transformer = new MatrixFormTransformer();
+            var transformer = new MatrixTransformer();
             var formChecker = new MatrixFormChecker();
 
             var input = parser.ParseMatrix("2,1,1,2,1,-1,0,-2,3,-1,2,2");

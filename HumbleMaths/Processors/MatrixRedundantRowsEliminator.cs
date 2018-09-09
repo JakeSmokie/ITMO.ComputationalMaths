@@ -6,13 +6,19 @@ namespace HumbleMaths.Processors {
     public class MatrixRedundantRowsEliminator {
         public Matrix<Fraction> EliminateRedundantRows(Matrix<Fraction> input) {
             var matrix = input.CloneMatrix();
-            var eliminatingRows = new HashSet<int>();
+            var nullRows = new HashSet<int>();
+            var eliminatingRows = new HashSet<(int, int)>();
 
             for (var row = 0; row < matrix.Height; row++) {
                 var isRowEmpty = IsRowEmpty(matrix, row);
 
                 if (isRowEmpty) {
-                    eliminatingRows.Add(row);
+                    nullRows.Add(row);
+                    continue;
+                }
+
+                if (eliminatingRows.Select(x => x.Item1)
+                    .Contains(row)) {
                     continue;
                 }
 
@@ -21,12 +27,11 @@ namespace HumbleMaths.Processors {
                         continue;
                     }
 
-                    eliminatingRows.Add(row);
-                    eliminatingRows.Add(secRow);
+                    eliminatingRows.Add((row, secRow));
                 }
             }
 
-            var rows = GetRemainingRows(matrix, eliminatingRows);
+            var rows = GetRemainingRows(matrix, eliminatingRows, nullRows);
 
             var newMatrix = new Fraction[rows.Count, matrix.Width];
             var pivotRow = 0;
@@ -46,10 +51,13 @@ namespace HumbleMaths.Processors {
             return new Matrix<Fraction>(newMatrix);
         }
 
-        private static HashSet<int> GetRemainingRows(Matrix<Fraction> matrix, HashSet<int> eliminatingRows) {
+        private static HashSet<int> GetRemainingRows(Matrix<Fraction> matrix, 
+            HashSet<(int, int)> eliminatingRows, HashSet<int> nullRows) {
             var rows = Enumerable.Range(0, matrix.Height)
                 .ToHashSet();
-            rows.ExceptWith(eliminatingRows);
+
+            rows.ExceptWith(eliminatingRows.Select(x => x.Item2));
+            rows.ExceptWith(nullRows);
 
             return rows;
         }

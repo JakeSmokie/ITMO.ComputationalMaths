@@ -27,21 +27,19 @@ namespace HumbleMathsWeb.Controllers {
             }
 
             var matrixModel = new MatrixModel {
-                Matrix = "",
                 Solution = null
             };
 
-            try {
+            //try {
                 var system = _parser.ParseMatrix(matrix);
                 matrixModel.System = system;
-                matrixModel.Matrix = system.ToString();
 
                 var solution = _solver.SolveSystem(system);
                 matrixModel.Solution = solution;
-            }
-            catch {
-                return View(matrixModel);
-            }
+            //}
+            //catch {
+            //    return View(matrixModel);
+            //}
 
             return View(matrixModel);
         }
