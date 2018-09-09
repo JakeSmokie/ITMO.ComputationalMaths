@@ -16,7 +16,7 @@
 
 <div class="row justify-content-between">
     <div class="col-5">
-        <h4>Лабораторная работа 1</h4>
+        <h4>Решение СЛАУ методом Гаусса</h4>
     </div>
     <div class="col-1">
         <a asp-area="" asp-controller="Maths" asp-action="Index"
@@ -29,7 +29,7 @@
     <form asp-route="gauss" method="post" id="form">
         <div class="form-group">
             <label for="matrix">Матрица, для которой должна быть решена СЛАУ</label>
-            <input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="((a, b, c), (d, e, f), ...)">
+            <input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c; d, e, f; ...">
             <small id="matrixHelp" class="form-text text-muted">Матрица должна иметь размерность N x (N + 1)</small>
         </div>
         <button type="submit" class="btn btn-primary">Решить</button>
@@ -83,7 +83,7 @@
 
         <h5>Определитель по гауссу</h5>
         <p>
-            $det @converter.ConvertToLatex(lastStepClamped)
+            $det @(converter.ConvertToLatex(lastStepClamped) + multiplier)
             = @(string.Join(" * ", lastStepClamped.MainDiagonalItems) + multiplier)
             = @Model.Solution.GetDeterminantByGauss()$
         </p>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HumbleMaths.Processors;
 using HumbleMaths.Structures;
 
@@ -25,10 +26,10 @@ namespace HumbleMaths.LinearSystemSolvers {
 
             for (var row = matrix.Height - 1; row >= 0; row--) {
                 DivideRowByMainDiagonalElement(matrix, row);
-                solvingSteps.Add(matrix.CloneMatrix());
+                AddSolvingStep(solvingSteps, matrix);
 
                 EliminateRowMainDiagonalElement(matrix, row);
-                solvingSteps.Add(matrix.CloneMatrix());
+                AddSolvingStep(solvingSteps, matrix);
 
                 result.Insert(0, matrix[row, matrix.Width - 1]);
             }
@@ -38,6 +39,14 @@ namespace HumbleMaths.LinearSystemSolvers {
             solution.Result = result;
 
             return solution;
+        }
+
+        private static void AddSolvingStep(List<Matrix<Fraction>> solvingSteps, Matrix<Fraction> matrix) {
+            if (solvingSteps.LastOrDefault()?.StringEquals(matrix) ?? false) {
+                return;
+            }
+
+            solvingSteps.Add(matrix.CloneMatrix());
         }
 
         private static void DivideRowByMainDiagonalElement(Matrix<Fraction> matrix, int row) {
