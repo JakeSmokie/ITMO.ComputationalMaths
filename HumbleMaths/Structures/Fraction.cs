@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Numerics;
 
 namespace HumbleMaths.Structures {
     /// <summary>
@@ -14,7 +15,7 @@ namespace HumbleMaths.Structures {
     /// Version: 2.0
     ///  
     /// What's new in version 2.0:
-    /// *	Changed Numerator and Denominator from Int32(integer) to Int64(long) for increased range
+    /// *	Changed Numerator and Denominator from Int32(integer) to Int64(BigInteger) for increased range
     /// *	renamed ConvertToString() to (overloaded) ToString()
     /// *	added the capability of detecting/raising overflow exceptions
     /// *	Fixed the bug that very small numbers e.g. 0.00000001 could not be converted to fraction
@@ -33,7 +34,7 @@ namespace HumbleMaths.Structures {
     /// no arguments:	initializes fraction as 0/1
     /// (Numerator, Denominator): initializes fraction with the given numerator and denominator values
     /// (integer):	initializes fraction with the given integer value
-    /// (long):	initializes fraction with the given long value
+    /// (BigInteger):	initializes fraction with the given BigInteger value
     /// (double):	initializes fraction with the given double value
     /// (string):	initializes fraction with the given string value
     /// the string can be an in the form of and integer, double or fraction.
@@ -71,11 +72,11 @@ namespace HumbleMaths.Structures {
     /// =
     ///  
     /// Overloaded user-defined conversions
-    /// Implicit:	From double/long/string to Fraction
+    /// Implicit:	From double/BigInteger/string to Fraction
     /// Explicit:	From Fraction to double/string
     /// </summary>
     public class Fraction : IComparable<Fraction> {
-        private long m_iDenominator;
+        private BigInteger m_iDenominator;
 
         /// <summary>
         ///     Constructors
@@ -98,14 +99,14 @@ namespace HumbleMaths.Structures {
             Initialize(temp.Numerator, temp.Denominator);
         }
 
-        public Fraction(long iNumerator, long iDenominator) {
+        public Fraction(BigInteger iNumerator, BigInteger iDenominator) {
             Initialize(iNumerator, iDenominator);
         }
 
         /// <summary>
         ///     Properites
         /// </summary>
-        public long Denominator {
+        public BigInteger Denominator {
             get { return m_iDenominator; }
             set {
                 if (value != 0) {
@@ -117,9 +118,9 @@ namespace HumbleMaths.Structures {
             }
         }
 
-        public long Numerator { get; set; }
+        public BigInteger Numerator { get; set; }
 
-        public long Value {
+        public BigInteger Value {
             set {
                 Numerator = value;
                 m_iDenominator = 1;
@@ -143,7 +144,7 @@ namespace HumbleMaths.Structures {
         /// <summary>
         ///     Internal function for constructors
         /// </summary>
-        private void Initialize(long iNumerator, long iDenominator) {
+        private void Initialize(BigInteger iNumerator, BigInteger iDenominator) {
             Numerator = iNumerator;
             Denominator = iDenominator;
             ReduceFraction(this);
@@ -153,7 +154,7 @@ namespace HumbleMaths.Structures {
         ///     The function returns the current Fraction object as double
         /// </summary>
         public double ToDouble() {
-            return (double) Numerator / Denominator;
+            return (double) Numerator / (double) Denominator;
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace HumbleMaths.Structures {
                     }
                     else {
                         var dTemp = dValue;
-                        long iMultiple = 1;
+                        BigInteger iMultiple = 1;
                         var strTemp = dValue.ToString(CultureInfo.InvariantCulture);
 
                         while (strTemp.IndexOf("E") > 0) // if in the form like 12E-9
@@ -486,7 +487,7 @@ namespace HumbleMaths.Structures {
         /// <summary>
         ///     The function returns GCD of two numbers (used for reducing a Fraction)
         /// </summary>
-        private static long GCD(long iNo1, long iNo2) {
+        private static BigInteger GCD(BigInteger iNo1, BigInteger iNo2) {
             // take absolute values
             if (iNo1 < 0) {
                 iNo1 = -iNo1;
