@@ -180,7 +180,7 @@ namespace HumbleMaths.Structures {
             if (i == strValue.Length) // if string is not in the form of a fraction
                 // then it is double or integer
             {
-                return Convert.ToDouble(strValue);
+                return Convert.ToDouble(strValue, CultureInfo.InvariantCulture);
             }
             //return ( ToFraction( Convert.ToDouble(strValue) ) );
 

@@ -30,16 +30,15 @@ namespace HumbleMathsWeb.Controllers {
                 Solution = null
             };
 
-            //try {
+            try {
                 var system = _parser.ParseMatrix(matrix);
                 matrixModel.System = system;
 
                 var solution = _solver.SolveSystem(system);
                 matrixModel.Solution = solution;
-            //}
-            //catch {
-            //    return View(matrixModel);
-            //}
+            } catch {
+                return View(matrixModel);
+            }
 
             return View(matrixModel);
         }

@@ -33,7 +33,7 @@ namespace HumbleMaths.Parsers {
         }
 
         private static Fraction ParseItem(string x) {
-            return new Fraction(double.Parse(x, NumberFormatInfo.InvariantInfo));
+            return Fraction.ToFraction(x);
         }
 
         private static Matrix<Fraction> CreateMatrix(List<Fraction> numbers, int width, int height) {
