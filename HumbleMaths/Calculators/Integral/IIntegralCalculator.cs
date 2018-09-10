@@ -7,4 +7,4 @@ namespace HumbleMaths.Calculators.Integral {
 
         string Formula { get; }
     }
-}
+} 

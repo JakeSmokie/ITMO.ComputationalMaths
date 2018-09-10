@@ -28,8 +28,6 @@ namespace HumbleMathsWeb.Models {
                 ["Метод прямоугольников (левые)"] = new FlatIntegralCalculator(new EdgeFlatPartCalculator(0.0)),
                 ["Метод прямоугольников (средние)"] = new FlatIntegralCalculator(new EdgeFlatPartCalculator(0.5)),
                 ["Метод прямоугольников (правые)"] = new FlatIntegralCalculator(new EdgeFlatPartCalculator(1.0)),
-                ["Метод трапеций"] = new FlatIntegralCalculator(new TrapezoidalPartCalculator()),
-                //["Метод симпсона"] = new FlatIntegralCalculator(new TrapezoidalPartCalculator()),
             };
     }
 }

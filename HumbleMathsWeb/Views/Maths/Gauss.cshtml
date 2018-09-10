@@ -10,6 +10,43 @@
     Layout = "_Layout";
 }
 
+<script type="text/javascript">
+    function random() {
+        let str = "";
+        let size = Math.round(Math.random() * 5 + 1);
+
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size + 1; j++) {
+                str += ((Math.random() - 0.5) * 10000).toFixed(4);
+
+                if (j != size) {
+                    str += ", ";
+                }
+            }
+
+            str += ";\n";
+        }
+
+        document.getElementsByName("Input")[0].value = str;
+    }
+
+    function upload() {
+        const fileReader = new FileReader();
+        fileReader.onload = function() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('post', "");
+            xhr.setRequestHeader("Content-type", "text/plain");
+            const result = window.atob(fileReader.result.replace("data:text/plain;base64,", ""));
+            xhr.send(result);
+            const input = result;
+            console.log(input);
+
+            document.getElementsByName("Input")[0].value = input;
+        };
+        fileReader.readAsDataURL(document.getElementById("file").files[0]);
+    }
+</script>
+
 <div class="row justify-content-between">
     <div class="col-5">
         <h4>Решение СЛАУ методом Гаусса</h4>
@@ -27,12 +64,13 @@
         <div class="form-group">
             <label for="matrix">Матрица, для которой должна быть решена СЛАУ</label>
 
-            @*<input type="text" class="form-control" name="matrix" id="matrix" aria-describedby="matrixHelp" placeholder="a, b, c; d, e, f; ...">*@
-            <textarea class="form-control" rows="5" id="matrix" asp-for="Input" plac></textarea>
-
+            <textarea class="form-control" rows="5" id="matrix" asp-for="Input"></textarea>
             <small id="matrixHelp" class="form-text text-muted">Элементы указываются через запятую, строки матрицы делятся точкой с запятой</small>
         </div>
         <button type="submit" class="btn btn-primary">Решить</button>
+        <input class="btn" type="file" name="file" id="file">
+        <input class="btn" type="button" value="Загрузить" onclick="upload()"/>
+        <input class="btn" type="button" value="Создать случайные коэффициенты" onclick="random()"/>
     </form>
 </div>
 <hr/>

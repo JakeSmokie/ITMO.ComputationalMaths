@@ -34,10 +34,7 @@ namespace HumbleMaths.Processors {
                 }
             }
             catch {
-                return new MatrixTransformationResult {
-                    Steps = steps,
-                    Result = matrix
-                };
+                // ignored
             }
 
             return new MatrixTransformationResult {
