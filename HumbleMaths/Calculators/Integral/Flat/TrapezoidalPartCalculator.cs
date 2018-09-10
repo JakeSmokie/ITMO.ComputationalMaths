@@ -9,4 +9,4 @@ namespace HumbleMaths.Calculators.Integral.Flat {
             return trapezoid;
         }
     }
-} 
+}

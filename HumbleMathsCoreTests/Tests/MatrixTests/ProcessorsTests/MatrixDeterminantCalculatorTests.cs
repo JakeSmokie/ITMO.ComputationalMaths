@@ -1,7 +1,5 @@
-﻿using HumbleMaths.Calculators;
-using HumbleMaths.Calculators.Matrix;
+﻿using HumbleMaths.Calculators.Matrix;
 using HumbleMaths.Parsers;
-using HumbleMaths.Processors;
 using Xunit;
 
 namespace HumbleMathsCoreTests.Tests.MatrixTests.ProcessorsTests {

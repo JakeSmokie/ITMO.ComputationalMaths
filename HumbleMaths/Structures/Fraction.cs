@@ -454,11 +454,9 @@ namespace HumbleMaths.Structures {
         /// </summary>
         private static Fraction Add(Fraction frac1, Fraction frac2) {
             try {
-                checked {
-                    var iNumerator = frac1.Numerator * frac2.Denominator + frac2.Numerator * frac1.Denominator;
-                    var iDenominator = frac1.Denominator * frac2.Denominator;
-                    return new Fraction(iNumerator, iDenominator);
-                }
+                var iNumerator = frac1.Numerator * frac2.Denominator + frac2.Numerator * frac1.Denominator;
+                var iDenominator = frac1.Denominator * frac2.Denominator;
+                return new Fraction(iNumerator, iDenominator);
             }
             catch (OverflowException) {
                 throw new FractionException("Overflow occurred while performing arithemetic operation");
@@ -470,11 +468,9 @@ namespace HumbleMaths.Structures {
 
         private static Fraction Multiply(Fraction frac1, Fraction frac2) {
             try {
-                checked {
-                    var iNumerator = frac1.Numerator * frac2.Numerator;
-                    var iDenominator = frac1.Denominator * frac2.Denominator;
-                    return new Fraction(iNumerator, iDenominator);
-                }
+                var iNumerator = frac1.Numerator * frac2.Numerator;
+                var iDenominator = frac1.Denominator * frac2.Denominator;
+                return new Fraction(iNumerator, iDenominator);
             }
             catch (OverflowException) {
                 throw new FractionException("Overflow occurred while performing arithemetic operation");

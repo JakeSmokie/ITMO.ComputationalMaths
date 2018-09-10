@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 
 namespace HumbleMaths.Parsers {
     public class LambdaParser {
-        private static Dictionary<string, string> _aliases =
+        private static readonly Dictionary<string, string> _aliases =
             new Dictionary<string, string> {
                 ["sin"] = "Math.Sin",
                 ["cos"] = "Math.Cos",
-                ["pow"] = "Math.Pow",
+                ["pow"] = "Math.Pow"
             };
 
         public Func<double, double> ParseLambda(string function) {

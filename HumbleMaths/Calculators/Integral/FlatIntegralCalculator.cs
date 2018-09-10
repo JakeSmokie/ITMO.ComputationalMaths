@@ -39,4 +39,4 @@ namespace HumbleMaths.Calculators.Integral {
 
         public string Formula { get; }
     }
-} 
+}

@@ -1,5 +1,4 @@
 ﻿using System;
-using HumbleMaths.Calculators;
 using HumbleMaths.Calculators.Integral;
 using HumbleMaths.Calculators.Integral.Flat;
 using HumbleMaths.Parsers;

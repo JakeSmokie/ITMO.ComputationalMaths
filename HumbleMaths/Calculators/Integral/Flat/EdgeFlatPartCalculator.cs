@@ -16,4 +16,4 @@ namespace HumbleMaths.Calculators.Integral.Flat {
             return func(start + (part + _offset) * precision) * precision;
         }
     }
-} 
+}
