@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using HumbleMaths.Processors;
 using HumbleMaths.Structures;
 
-namespace HumbleMaths.Calculators {
+namespace HumbleMaths.Calculators.Matrix {
     public class MatrixDeterminantCalculator {
         private readonly MatrixClamper _matrixClamper = new MatrixClamper();
         private readonly MatrixMinorCalculator _minorCalculator = new MatrixMinorCalculator();

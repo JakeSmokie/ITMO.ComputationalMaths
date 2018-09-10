@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
+using System.Threading;
+using System.Threading.Tasks;
 using HumbleMaths.Calculators;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
@@ -76,12 +78,35 @@ namespace HumbleMathsWeb.Controllers {
                 return View(model);
             }
 
-            var calculator = new IntegralCalculator(model.Precision);
+            try {
+                var function = lambdaParser.ParseLambda(model.IntegralFunctionExpression);
+                model.IntegralFunc = function;
+            }
+            catch {
+                // ignored
+            }
+
+            var found = model.Methods.TryGetValue(model.MethodAsText, out var method);
+
+            if (!found) {
+                return View(model);
+            }
+
+            model.IntegralCalculator = method;
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            (model.IntegralValue, model.PartsAmount) =
-                calculator.Calculate(model.Func, model.Start, model.End);
+            model.CalculationFinished = false;
+
+            var task = Task.Run(() => {
+                (model.IntegralValue, model.PartsAmount) =
+                    method.Calculate(model.Func, model.Start, model.End, model.Precision);
+
+                model.CalculationFinished = true;
+            });
+
+            task.Wait(20000);
 
             stopwatch.Stop();
             model.CalculationTime = stopwatch.Elapsed;

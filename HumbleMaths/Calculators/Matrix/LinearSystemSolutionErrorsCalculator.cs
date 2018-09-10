@@ -2,7 +2,7 @@
 using System.Linq;
 using HumbleMaths.Structures;
 
-namespace HumbleMaths.Calculators {
+namespace HumbleMaths.Calculators.Matrix {
     public class LinearSystemSolutionErrorsCalculator {
         public List<Fraction> CalculateErrors(Matrix<Fraction> system, List<Fraction> solution) {
             return Enumerable.Range(0, system.Height)

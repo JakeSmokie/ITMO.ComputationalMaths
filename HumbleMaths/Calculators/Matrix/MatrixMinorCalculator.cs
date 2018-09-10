@@ -1,6 +1,6 @@
 ﻿using HumbleMaths.Structures;
 
-namespace HumbleMaths.Calculators {
+namespace HumbleMaths.Calculators.Matrix {
     public class MatrixMinorCalculator {
         public Matrix<Fraction> GetMinor(Matrix<Fraction> matrix, int skippedRow, int skippedColumn) {
             var size = matrix.Height - 1;
