@@ -79,11 +79,12 @@
 
         <h5>Результат - через неопределенный интеграл</h5>
         <p>
-            $\int_{@Model.StartAsText}^{@Model.EndAsText} f(x) \ dx = F(@Model.EndAsText) - F(@Model.StartAsText) = @actualIntegralValue$
+            $\int_{@Model.StartAsText}^{@Model.EndAsText} f(x) \ dx = F(@Model.EndAsText) - F(@Model.StartAsText) =
+            @actualIntegralValue.ToString(CultureInfo.InvariantCulture)$
         </p>
 
         <h5>Погрешность</h5>
-        <p>$\Delta = @(Model.IntegralValue - actualIntegralValue)$</p>
+        <p>$\Delta = @((Model.IntegralValue - actualIntegralValue).ToString(CultureInfo.InvariantCulture))$</p>
     }
 
     <h5>Время, затраченное на исчисление</h5>
