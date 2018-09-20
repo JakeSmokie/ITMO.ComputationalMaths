@@ -12,12 +12,14 @@ namespace HumbleMathsCoreTests.Tests.InterpolationTests {
         [InlineData("sin(x)", 0, 3.14, 0.1, 0.005, 0.1)]
         [InlineData("pow(x, 2)", 0, 30, 1, 0.1, 0.1)]
         [InlineData("x", 0, 300, 1, 5, 0.1)]
-        public void Test(string function, double start, double end, double inputStep, double checkStep, double maxError) {
+        public void Test(string function, double start, double end, double inputStep, double checkStep,
+            double maxError) {
             var parser = new LambdaParser();
             var valuesGenerator = new FunctionValuesGenerator();
             var interpolator = new LagrangeInterpolator();
 
             var func = parser.ParseLambda(function);
+
             var input = valuesGenerator
                 .GenerateValues(func, start, end, inputStep)
                 .ToList();
