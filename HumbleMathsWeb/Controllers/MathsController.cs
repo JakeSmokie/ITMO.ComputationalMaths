@@ -114,6 +114,11 @@ namespace HumbleMathsWeb.Controllers {
             return View(model);
         }
 
+        [Route("/Maths/Lagrange")]
+        public IActionResult Lagrange() {
+            return View();
+        }
+
         private static bool ParseFields(IntegralModel model) {
             if (!double.TryParse(model.StartAsText, NumberStyles.Any,
                 CultureInfo.InvariantCulture, out var start)) {
