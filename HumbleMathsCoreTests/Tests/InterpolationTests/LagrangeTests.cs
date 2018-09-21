@@ -22,10 +22,11 @@ namespace HumbleMathsCoreTests.Tests.InterpolationTests {
 
             var input = valuesGenerator
                 .GenerateValues(func, start, end, inputStep)
-                .ToList();
+                .ToList()
+                .AsReadOnly();
 
             var interpolationFunction = interpolator
-                .InterpolateByPoints(new ReadOnlyCollection<(double x, double y)>(input));
+                .InterpolateByPoints(input);
 
             var expected = valuesGenerator
                 .GenerateValues(func, start, end, checkStep)

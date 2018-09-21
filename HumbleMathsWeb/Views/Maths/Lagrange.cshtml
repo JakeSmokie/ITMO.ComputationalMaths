@@ -1,7 +1,70 @@
-﻿@{
+﻿@using System.Globalization
+@model LagrangeModel
+@{
     ViewBag.Title = "Лабораторная работа 3";
     Layout = "_Layout";
 }
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    $(document).ready(() => {
+        const actualX = [
+            @string.Join(", ", Model.Values
+                .Select(val => $"{val.x.ToString("F10", CultureInfo.InvariantCulture)}"))
+        ];
+
+        const actualY = [
+            @string.Join(", ", Model.Values
+                .Select(val => $"{val.y.ToString("F10", CultureInfo.InvariantCulture)}"))
+        ];
+
+        const interpolatedX = [
+            @string.Join(", ", Model.InterpolatedValues
+                .Select(val => $"{val.x.ToString("F10", CultureInfo.InvariantCulture)}"))
+        ];
+
+        const interpolatedY = [
+            @string.Join(", ", Model.InterpolatedValues
+                .Select(val => $"{val.y.ToString("F10", CultureInfo.InvariantCulture)}"))
+        ];
+
+        const nodesX = [
+            @string.Join(", ", Model.InterpolationNodes
+                .Select(val => $"{val.x.ToString("F10", CultureInfo.InvariantCulture)}"))
+        ];
+
+        const nodesY = [
+            @string.Join(", ", Model.InterpolationNodes
+                .Select(val => $"{val.y.ToString("F10", CultureInfo.InvariantCulture)}"))
+        ];
+
+        const data = [];
+        data.push({
+            type: "scattergl",
+            mode: "line",
+            x: actualX,
+            y: actualY
+        });
+
+        data.push({
+            type: "scattergl",
+            mode: "line",
+            x: interpolatedX,
+            y: interpolatedY
+        });
+
+        data.push({
+            type: "scattergl",
+            mode: "markers",
+            x: nodesX,
+            y: nodesY
+        });
+
+        const layout = { showlegend: false };
+        Plotly.plot('graph', data, layout);
+    });
+</script>
 
 <div class="row justify-content-between">
     <div class="col-7">
@@ -14,4 +77,31 @@
         </a>
     </div>
 </div>
-<hr />
+<hr/>
+
+<div class="container-fluid">
+    <form asp-route="Lagrange" method="post" id="form">
+        <div class="form-group">
+            <label style="margin: 10px">Функция вида $f(x)$</label>
+            <input type="text" asp-for="FunctionExpression" class="form-control" name="FunctionExpression" id="function" placeholder="2 * x, cos(x), pow(x, 3) * 4, etc.">
+        </div>
+        <div class="form-group form-row">
+            <div class="col">
+                <input type="text" asp-for="Start" class="form-control" name="Start" id="start" placeholder="Стартовое значение">
+            </div>
+            <div class="col">
+                <input type="text" asp-for="End" class="form-control" name="End" id="end" placeholder="Конечное">
+            </div>
+            <div class="col">
+                <input type="text" asp-for="Step" class="form-control" name="Step" id="step" placeholder="Шаг для отображения">
+            </div>
+            <div class="col">
+                <input type="text" asp-for="InterpolationStep" class="form-control" name="InterpolationStep" id="intStep" placeholder="Шаг для интерполяции">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Интерполировать функцию</button>
+    </form>
+</div>
+
+<div id="graph"></div>

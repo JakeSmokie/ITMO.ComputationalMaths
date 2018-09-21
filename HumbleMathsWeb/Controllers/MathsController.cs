@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Threading;
 using System.Threading.Tasks;
 using HumbleMaths.Calculators;
+using HumbleMaths.Calculators.Approximation;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
 using HumbleMaths.Structures;
+using HumbleMaths.Tools;
 using HumbleMathsWeb.Models;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
@@ -114,11 +117,6 @@ namespace HumbleMathsWeb.Controllers {
             return View(model);
         }
 
-        [Route("/Maths/Lagrange")]
-        public IActionResult Lagrange() {
-            return View();
-        }
-
         private static bool ParseFields(IntegralModel model) {
             if (!double.TryParse(model.StartAsText, NumberStyles.Any,
                 CultureInfo.InvariantCulture, out var start)) {
@@ -140,6 +138,56 @@ namespace HumbleMathsWeb.Controllers {
             model.Precision = precision;
 
             return true;
+        }
+
+        [Route("/Maths/Lagrange")]
+        [HttpPost("/Maths/Lagrange")]
+        public IActionResult Lagrange(LagrangeModel model) {
+            if (model == null) {
+                return View();
+            }
+
+            var parser = new LambdaParser();
+            var generator = new FunctionValuesGenerator();
+            var interpolator = new LagrangeInterpolator();
+
+            try {
+                var func = parser.ParseLambda(model.FunctionExpression);
+                var start = double.Parse(model.Start, CultureInfo.InvariantCulture);
+                var end = double.Parse(model.End, CultureInfo.InvariantCulture);
+                var step = double.Parse(model.Step, CultureInfo.InvariantCulture);
+
+                if ((end - start) / step > 10000) {
+                    return View(model);
+                }
+
+                model.Values = generator.GenerateValues(func, start, end, step)
+                    .ToList()
+                    .AsReadOnly();
+
+                var interpolationStep = double.Parse(model.InterpolationStep, CultureInfo.InvariantCulture);
+
+                if ((end - start) / interpolationStep > 500) {
+                    return View(model);
+                }
+
+                model.InterpolationNodes = generator
+                    .GenerateValues(func, start, end, interpolationStep)
+                    .ToList()
+                    .AsReadOnly();
+
+                var interpolationFunction = interpolator
+                    .InterpolateByPoints(model.InterpolationNodes);
+
+                model.InterpolatedValues = generator
+                    .GenerateValues(interpolationFunction, start, end, step)
+                    .ToList()
+                    .AsReadOnly();
+            } catch {
+                // ignored
+            }
+
+            return View(model);
         }
     }
 }
