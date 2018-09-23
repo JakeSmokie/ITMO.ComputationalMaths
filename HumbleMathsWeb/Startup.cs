@@ -42,7 +42,6 @@ namespace HumbleMathsWeb {
 
             InitCultures(app);
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

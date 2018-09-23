@@ -2,17 +2,12 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Dynamic.Core.Exceptions;
-using System.Threading;
 using System.Threading.Tasks;
-using HumbleMaths.Calculators;
 using HumbleMaths.Calculators.Approximation;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
-using HumbleMaths.Structures;
 using HumbleMaths.Tools;
 using HumbleMathsWeb.Models;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HumbleMathsWeb.Controllers {
@@ -147,34 +142,24 @@ namespace HumbleMathsWeb.Controllers {
                 return View();
             }
 
-            var parser = new LambdaParser();
             var generator = new FunctionValuesGenerator();
             var interpolator = new LagrangeInterpolator();
 
             try {
-                var func = parser.ParseLambda(model.FunctionExpression);
                 var start = double.Parse(model.Start, CultureInfo.InvariantCulture);
                 var end = double.Parse(model.End, CultureInfo.InvariantCulture);
                 var step = double.Parse(model.Step, CultureInfo.InvariantCulture);
 
                 if ((end - start) / step > 10000) {
-                    return View(model);
+                    throw new ArgumentException();
                 }
 
-                model.Values = generator.GenerateValues(func, start, end, step)
-                    .ToList()
-                    .AsReadOnly();
-
-                var interpolationStep = double.Parse(model.InterpolationStep, CultureInfo.InvariantCulture);
-
-                if ((end - start) / interpolationStep > 500) {
-                    return View(model);
+                if (model.InputWay == "func") {
+                    InterpolateByFunction(generator, start, end, step);
                 }
-
-                model.InterpolationNodes = generator
-                    .GenerateValues(func, start, end, interpolationStep)
-                    .ToList()
-                    .AsReadOnly();
+                else {
+                    InterpolateByPoints();
+                }
 
                 var interpolationFunction = interpolator
                     .InterpolateByPoints(model.InterpolationNodes);
@@ -183,11 +168,43 @@ namespace HumbleMathsWeb.Controllers {
                     .GenerateValues(interpolationFunction, start, end, step)
                     .ToList()
                     .AsReadOnly();
-            } catch {
+            }
+            catch {
                 // ignored
             }
 
             return View(model);
+
+            void InterpolateByFunction(FunctionValuesGenerator valuesGenerator, double start, double end, double step) {
+                var func = new LambdaParser().ParseLambda(model.FunctionExpression);
+
+                model.Values = valuesGenerator.GenerateValues(func, start, end, step)
+                    .ToList()
+                    .AsReadOnly();
+
+                var interpolationStep = double.Parse(model.InterpolationStep, CultureInfo.InvariantCulture);
+
+                if ((end - start) / interpolationStep > 500) {
+                    throw new ArgumentException();
+                }
+
+                model.InterpolationNodes = valuesGenerator
+                    .GenerateValues(func, start, end, interpolationStep)
+                    .ToList()
+                    .AsReadOnly();
+            }
+
+            void InterpolateByPoints() {
+                model.InterpolationNodes = model.InputValues
+                    .Split('\n')
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Select(s => s.Trim().Split(' ')
+                        .Select(n => double.Parse(n, CultureInfo.InvariantCulture))
+                        .ToList())
+                    .Select(n => (n[0], n[1]))
+                    .ToList()
+                    .AsReadOnly();
+            }
         }
     }
 }

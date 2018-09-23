@@ -17,5 +17,8 @@ namespace HumbleMathsWeb.Models {
 
         public ReadOnlyCollection<(double x, double y)> InterpolationNodes { get; set; } =
             new List<(double x, double y)>().AsReadOnly();
+
+        public string InputValues { get; set; }
+        public string InputWay { get; set; }
     }
 }

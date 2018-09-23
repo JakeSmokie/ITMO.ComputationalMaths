@@ -19,28 +19,42 @@
 <hr/>
 <div class="container-fluid">
     <form asp-route="Integral" method="post" id="form">
-        <div class="form-group">
-            <label style="margin: 10px">Функция вида $f(x)$</label>
-            <input type="text" asp-for="FunctionExpression" class="form-control" name="FunctionExpression" id="function" placeholder="2 * x, cos(x), pow(x, 3) * 4, etc.">
+        <div class="form-group form-row">
+            <div class="col">
+                <label style="margin: 10px">
+                    <small>Функция вида $f(x)$</small>
+                </label>
+                <input type="text" asp-for="FunctionExpression" class="form-control" name="FunctionExpression" id="function" placeholder="2 * x, cos(x), pow(x, 3) * 4, etc.">
+            </div>
 
-            <label style="margin: 10px">Неопределённый интеграл $\int{f(x)} dx = F(x)$</label>
-            <input type="text" asp-for="IntegralFunctionExpression" class="form-control" name="IntegralFunctionExpression" id="intFunction" placeholder="pow(x, 2), sin(x), pow(x, 4), etc.">
-
-            <label style="margin: 10px">Начало отрезка интегрирования</label>
-            <input type="text" asp-for="StartAsText" class="form-control" name="StartAsText" id="start">
-
-            <label style="margin: 10px">Конец отрезка интегрирования</label>
-            <input type="text" asp-for="EndAsText" class="form-control" name="EndAsText" id="end">
-
-            <label style="margin: 10px">Точность вычисления</label>
-            <input type="text" asp-for="PrecisionAsText" class="form-control" name="PrecisionAsText" id="precision">
-
-            <label style="margin: 10px">Способ исчисления</label>
-            <select class="form-control" asp-for="MethodAsText" name="MethodAsText">
-                @foreach (var method in Model.Methods.Keys) {
-                    <option>@method</option>
-                }
-            </select>
+            <div class="col">
+                <label style="margin: 10px">
+                    <small>Неопределённый интеграл $\int{f(x)} dx = F(x)$</small>
+                </label>
+                <input type="text" asp-for="IntegralFunctionExpression" class="form-control" name="IntegralFunctionExpression" id="intFunction" placeholder="pow(x, 2), sin(x), pow(x, 4), etc.">
+            </div>
+            <div class="col">
+                <label style="margin: 10px">Способ исчисления</label>
+                <select class="form-control" asp-for="MethodAsText" name="MethodAsText">
+                    @foreach (var method in Model.Methods.Keys) {
+                        <option>@method</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <div class="col">
+                <label style="margin: 10px">Начало отрезка интегрирования</label>
+                <input type="text" asp-for="StartAsText" class="form-control" name="StartAsText" id="start">
+            </div>
+            <div class="col">
+                <label style="margin: 10px">Конец отрезка интегрирования</label>
+                <input type="text" asp-for="EndAsText" class="form-control" name="EndAsText" id="end">
+            </div>
+            <div class="col">
+                <label style="margin: 10px">Точность вычисления</label>
+                <input type="text" asp-for="PrecisionAsText" class="form-control" name="PrecisionAsText" id="precision">
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">Решить</button>
     </form>
