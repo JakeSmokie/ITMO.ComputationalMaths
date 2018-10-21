@@ -23,18 +23,28 @@ namespace HumbleMaths.Calculators.FunctionIntegrators {
 
         public ReadOnlyCollection<(double x, double z)> IntegrateFunction(
             Func<double, double, double> fFunction, Func<double, double> yFunction,
-            (double x, double z) caucheSolution, double stepLength, int stepsAmount) {
+            (double x, double z) caucheSolution, double stepLength, int totalStepsAmount) {
             var points = new List<(double x, double z)> {
                 caucheSolution
             };
 
-            for (var m = 1; m < stepsAmount; m++) {
-                var zLast = points.Last().z;
+            while (totalStepsAmount > 0) {
+                var stepsAmount = _maxAmountOfParts;
 
-                var sum = Enumerable.Range(0, m)
-                    .Sum(j => q(m - j) * _coefficients[(m - 1, j)]);
+                if (totalStepsAmount % _maxAmountOfParts != 0) {
+                    stepsAmount = totalStepsAmount % _maxAmountOfParts;
+                }
 
-                points.Add((m * stepLength + caucheSolution.x, zLast + sum));
+                for (var m = 1; m < stepsAmount + 1; m++) {
+                    var zLast = points.Last().z;
+
+                    var sum = Enumerable.Range(0, m)
+                        .Sum(j => q(m - j) * _coefficients[(m - 1, j)]);
+
+                    points.Add((m * stepLength + caucheSolution.x, zLast + sum));
+                }
+
+                totalStepsAmount -= stepsAmount;
             }
 
             return points.AsReadOnly();

@@ -17,7 +17,7 @@ namespace HumbleMathsCoreTests.Tests.IntegratorTests {
         [InlineData("2 * x", "1", "x * x", 0, 0, 10, 0.01, 0.1)]
         [InlineData("x + y", "x", "x * x", 0, 0, 10, 0.01, 0.1)]
         [InlineData("cos(x)", "1", "sin(x)", 0, 0, 10, 0.01, 0.1)]
-        [InlineData("cos(x)", "1", "sin(x - 1) + 1", 1, 1, 10, 0.01, 0.1)]
+        [InlineData("cos(x)", "1", "sin(x - 1) + 1", 1, 1, 98, 0.01, 0.5)]
         public void Test(string fFunctionExpression, string yFunctionExpression, string realFunctionExpression, 
             double xCauche, double yCauche, int stepAmount, double stepLength, double maxError) {
             var fFunction = parser.ParseLambdaWithSecondParameter(fFunctionExpression);
