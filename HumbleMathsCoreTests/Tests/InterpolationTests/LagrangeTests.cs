@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using HumbleMaths.Calculators.Approximation;
+using HumbleMaths.Calculators.Interpolation;
 using HumbleMaths.Parsers;
 using HumbleMaths.Tools;
 using Xunit;

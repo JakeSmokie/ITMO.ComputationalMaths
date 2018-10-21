@@ -13,18 +13,29 @@ namespace HumbleMaths.Parsers {
             };
 
         public Func<double, double> ParseLambda(string function) {
-            foreach (var (key, value) in _aliases) {
-                function = function.Replace(key, value);
-            }
-
             var parameters = new[] {
                 Expression.Parameter(typeof(double), "x")
             };
 
-            var lambda = DynamicExpressionParser
-                .ParseLambda(parameters, typeof(double), function);
+            return LambdaExpression(function, parameters)?.Compile() as Func<double, double>;
+        }
 
-            return lambda?.Compile() as Func<double, double>;
+        public Func<double, double, double> ParseLambdaWithSecondParameter(string function) {
+            var parameters = new[] {
+                Expression.Parameter(typeof(double), "x"),
+                Expression.Parameter(typeof(double), "y")
+            };
+
+            return LambdaExpression(function, parameters)?.Compile() as Func<double, double, double>;
+        }
+
+        private static LambdaExpression LambdaExpression(string function, ParameterExpression[] parameters) {
+            foreach (var (key, value) in _aliases) {
+                function = function.Replace(key, value);
+            }
+
+            return DynamicExpressionParser
+                .ParseLambda(parameters, typeof(double), function);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using HumbleMaths.Extensions;
 
-namespace HumbleMaths.Calculators.Approximation {
+namespace HumbleMaths.Calculators.Interpolation {
     public class LagrangeInterpolator : IFunctionInterpolator {
         public Func<double, double> InterpolateByPoints(ReadOnlyCollection<(double x, double y)> points) {
             return x => points

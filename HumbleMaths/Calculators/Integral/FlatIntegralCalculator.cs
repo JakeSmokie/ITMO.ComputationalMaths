@@ -10,6 +10,8 @@ namespace HumbleMaths.Calculators.Integral {
             _flatPartCalculator = flatPartCalculator;
         }
 
+        public string Formula { get; }
+
         public (double Integral, int PartsAmount) Calculate(
             Func<double, double> func, double start, double end, double precision) {
             var resultMultiplier = 1;
@@ -30,13 +32,11 @@ namespace HumbleMaths.Calculators.Integral {
             }
 
             return (
-                Enumerable.Range(0, partsAmount - 1)
+                ParallelEnumerable.Range(0, partsAmount - 1)
                     .AsParallel()
                     .Sum(i => _flatPartCalculator.CalculatePart(func, start, end, precision, i)) * resultMultiplier,
                 partsAmount
             );
         }
-
-        public string Formula { get; }
     }
 }

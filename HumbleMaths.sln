@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumbleMathsCoreTests", "Hum
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumbleMathsWeb", "HumbleMathsWeb\HumbleMathsWeb.csproj", "{EBF52ADE-BD0B-4CF8-8F2F-41D9B24E2C80}"
 EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "HumbleMathsFSharpy", "HumbleMathsFSharpy\HumbleMathsFSharpy.fsproj", "{1103DE2B-EFD9-418F-9D7E-0D4F4DE90A61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EBF52ADE-BD0B-4CF8-8F2F-41D9B24E2C80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBF52ADE-BD0B-4CF8-8F2F-41D9B24E2C80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBF52ADE-BD0B-4CF8-8F2F-41D9B24E2C80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1103DE2B-EFD9-418F-9D7E-0D4F4DE90A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1103DE2B-EFD9-418F-9D7E-0D4F4DE90A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1103DE2B-EFD9-418F-9D7E-0D4F4DE90A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1103DE2B-EFD9-418F-9D7E-0D4F4DE90A61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

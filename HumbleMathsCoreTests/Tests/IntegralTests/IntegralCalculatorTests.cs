@@ -1,4 +1,5 @@
 ﻿using System;
+
 using HumbleMaths.Calculators.Integral;
 using HumbleMaths.Calculators.Integral.Flat;
 using HumbleMaths.Parsers;
@@ -16,10 +17,10 @@ namespace HumbleMathsCoreTests.Tests.IntegralTests {
         public void Test(string funcExpression, double start, double end,
             double expected, double precision, double maxError) {
             var lambdaParser = new LambdaParser();
-            var func = lambdaParser.ParseLambda(funcExpression);
+            var tempFunc = lambdaParser.ParseLambda(funcExpression);
 
             var calculator = new FlatIntegralCalculator(new EdgeFlatPartCalculator(0));
-            var result = calculator.Calculate(func, start, end, precision).Integral;
+            var result = calculator.Calculate(x => tempFunc(x), start, end, precision).Integral;
 
             Assert.True(Math.Abs(expected - result) < maxError);
         }

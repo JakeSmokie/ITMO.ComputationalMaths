@@ -182,9 +182,9 @@
                         // Remove messages from rules, but allow them to be set separately
                         delete existingRules.messages;
                         staticRules[element.name] = existingRules;
-                        if (argument.messages) {
+                        if (argument."") {
                             settings.messages[element.name] =
-                                $.extend(settings.messages[element.name], argument.messages);
+                                $.extend(settings."");
                         }
                         break;
                     case "remove":
@@ -1593,7 +1593,7 @@
                         data,
                         optionDataString;
 
-                    if (!this.settings.messages[element.name]) {
+                    if (!this.settings."") {
                         this.settings.messages[element.name] = {};
                     }
                     previous.originalMessage = previous.originalMessage || this.settings.messages[element.name][method];

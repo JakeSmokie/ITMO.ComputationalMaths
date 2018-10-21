@@ -3,7 +3,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using HumbleMaths.Calculators.Approximation;
+
+using HumbleMaths.Calculators.Interpolation;
 using HumbleMaths.LinearSystemSolvers;
 using HumbleMaths.Parsers;
 using HumbleMaths.Tools;
@@ -14,6 +15,8 @@ namespace HumbleMathsWeb.Controllers {
     public class MathsController : Controller {
         private readonly MatrixParser _parser = new MatrixParser();
         private readonly GaussSolver _solver = new GaussSolver();
+        private readonly FunctionValuesGenerator _functionValuesGenerator = new FunctionValuesGenerator();
+        private readonly IFunctionInterpolator _lagrangeInterpolator = new LagrangeInterpolator();
 
         public IActionResult Index() {
             return View();
@@ -99,7 +102,7 @@ namespace HumbleMathsWeb.Controllers {
 
             var task = Task.Run(() => {
                 (model.IntegralValue, model.PartsAmount) =
-                    method.Calculate(model.Func, model.Start, model.End, model.Precision);
+                    method.Calculate(x => model.Func(x), model.Start, model.End, model.Precision);
 
                 model.CalculationFinished = true;
             });
@@ -142,9 +145,6 @@ namespace HumbleMathsWeb.Controllers {
                 return View();
             }
 
-            var generator = new FunctionValuesGenerator();
-            var interpolator = new LagrangeInterpolator();
-
             try {
                 var start = double.Parse(model.Start, CultureInfo.InvariantCulture);
                 var end = double.Parse(model.End, CultureInfo.InvariantCulture);
@@ -155,16 +155,16 @@ namespace HumbleMathsWeb.Controllers {
                 }
 
                 if (model.InputWay == "func") {
-                    InterpolateByFunction(generator, start, end, step);
+                    InterpolateByFunction(_functionValuesGenerator, start, end, step);
                 }
                 else {
                     InterpolateByPoints();
                 }
 
-                var interpolationFunction = interpolator
+                var interpolationFunction = _lagrangeInterpolator
                     .InterpolateByPoints(model.InterpolationNodes);
 
-                model.InterpolatedValues = generator
+                model.InterpolatedValues = _functionValuesGenerator
                     .GenerateValues(interpolationFunction, start, end, step)
                     .ToList()
                     .AsReadOnly();
