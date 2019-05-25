@@ -16,4 +16,10 @@
     <ProjectReference Include="..\HumbleMaths\HumbleMaths.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\IntegratorContoller\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

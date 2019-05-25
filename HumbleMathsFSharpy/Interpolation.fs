@@ -23,4 +23,5 @@ type public AlternativeLagrangeInterpolator() =
             Func<float,float> (fun (x : float) -> 
                 points 
                 |> Seq.map (fun p -> Tuples.snd p * calcMultipliers (Tuples.fst p) x)
-                |> Seq.sum)
+                |> Seq.sum
+            )

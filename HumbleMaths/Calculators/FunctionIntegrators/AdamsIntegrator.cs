@@ -15,7 +15,7 @@ namespace HumbleMaths.Calculators.FunctionIntegrators {
         private readonly FlatIntegralCalculator _integralCalculator =
             new FlatIntegralCalculator(new EdgeFlatPartCalculator(0.0));
 
-        private readonly int _maxAmountOfParts = 10;
+        private readonly int _maxAmountOfParts = 8;
 
         public AdamsIntegrator() {
             GenerateTable();
@@ -36,12 +36,14 @@ namespace HumbleMaths.Calculators.FunctionIntegrators {
                 }
 
                 for (var m = 1; m < stepsAmount + 1; m++) {
+                    var xLast = points.Last().x;
                     var zLast = points.Last().z;
 
+                    var x = xLast + stepLength;
                     var sum = Enumerable.Range(0, m)
-                        .Sum(j => q(m - j) * _coefficients[(m - 1, j)]);
+                        .Sum(j => q(x) * _coefficients[(m - 1, j)]);
 
-                    points.Add((m * stepLength + caucheSolution.x, zLast + sum));
+                    points.Add((x, zLast + sum));
                 }
 
                 totalStepsAmount -= stepsAmount;
@@ -49,8 +51,7 @@ namespace HumbleMaths.Calculators.FunctionIntegrators {
 
             return points.AsReadOnly();
 
-            double q(int i) {
-                var x = stepLength * i + caucheSolution.x;
+            double q(double x) {
                 return stepLength * fFunction(x, yFunction(x));
             }
         }
